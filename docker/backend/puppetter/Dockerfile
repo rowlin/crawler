@@ -21,28 +21,36 @@ COPY  /puppetter /puppetter
 # puppeteer-stream
 # Add user so we don't need --no-sandbox.
 # same layer as npm install to keep re-chowned files from using up several hundred MBs more space
-#    && mkdir -p /home/node/Downloads \
-#    && chown -R node:node /home/node \
-#    && chown -R node:node /node_modules \
-#    && chown -R node:node /puppetter \
-#    && chown -R node:node /package.json \
-#    && chown -R node:node /package-lock.json \
-#    && chown -R node:node /tmp
 
+#группа node существует
+#RUN adduser --system --uid 1001
 
-ENV PORT=3000
+RUN mkdir -p /home/node/Downloads \
+    && mkdir /tmp/.X11-unix \
+    && chmod 1777 /tmp/.X11-unix \
+    && chown root /tmp/.X11-unix \
+    && chown -R node:node /home/node \
+    && chown -R node:node /puppetter \
+    && chmod -R 777 /puppetter/pdf \
+    && chown -R node:node ./node_modules \
+    && chown -R node:node ./package.json \
+    && chown -R node:node ./package-lock.json
 
-# Run everything after as non-privileged user.
-#USER node
+RUN mkdir /usr/local/sbin/chrome-devel-sandbox \
+    && chown root:root /usr/local/sbin/chrome-devel-sandbox \
+    && chmod 4755 /usr/local/sbin/chrome-devel-sandbox \
+    && export CHROME_DEVEL_SANDBOX=/usr/local/sbin/chrome-devel-sandbox
 
-# Start server on port 3000∂
+# Start server on port 3000
 EXPOSE 3000:3000
 ENV PORT=3000
 
 # Creating Display
 ENV DISPLAY :99
-
+WORKDIR /puppetter
+USER node
 # Start script on Xvfb
+# [ -f /tmp/.X100-lock ] &&  rm $FILE || 'file not found'
 CMD Xvfb :99 -screen 0 1024x768x16 & npm start
 
 

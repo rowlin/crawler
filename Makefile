@@ -2,6 +2,8 @@ init: docker-down-clear docker-pull docker-build docker-up docker-composer-insta
 up: docker-up
 down: docker-down
 restart: down up
+logs:
+	docker-compose logs -f
 sh:
 	docker-compose run --rm php-cli bash
 docker-composer-install:
