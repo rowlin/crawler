@@ -1,11 +1,13 @@
 FROM php:7.4-rc-cli
-RUN apt-get update && apt-get install unzip
+RUN apt-get update && apt-get install -y unzip zlib1g-dev libicu-dev g++
 
 ARG USER_ID=1000
 #RUN mv /common/backend/php/php.ini $PHP_INI_DIR/php.ini
 #COPY ./common/php/conf.d /usr/local/etc/php/conf.d
 
 RUN docker-php-ext-install pdo_mysql mysqli
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
