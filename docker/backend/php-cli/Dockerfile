@@ -1,4 +1,4 @@
-FROM php:7.4-rc-cli
+FROM php:8.1-rc-cli
 RUN apt-get update && apt-get install -y unzip zlib1g-dev libicu-dev g++
 
 ARG USER_ID=1000
@@ -6,8 +6,10 @@ ARG USER_ID=1000
 #COPY ./common/php/conf.d /usr/local/etc/php/conf.d
 
 RUN docker-php-ext-install pdo_mysql mysqli
-RUN docker-php-ext-configure intl
-RUN docker-php-ext-install intl
+#RUN docker-php-ext-install intl
+RUN docker-php-ext-install exif
+#RUN docker-php-ext-configure intl
+RUN docker-php-ext-configure exif
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 

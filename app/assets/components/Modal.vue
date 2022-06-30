@@ -4,24 +4,26 @@
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Create new Job</p>
-          <button class="delete modal-close-btn" @click="closeModal" aria-label="close"></button>
+          <button class="delete modal-close-btn" @click="closeModal" aria-label="close"> X</button>
         </header>
         <section class="modal-card-body">
             <label for="name">Name</label>
-            <input type="text" class="input" id="name" :value="data.name" />
-            <label for="url">Url</label>
-            <input type="text" class="input" id="url" :value="data.url" />
-
-            <label for="date" @click="data.date = date">Start date: {{ date }}</label>
-            <input type="datetime-local" class="input" id="date" :value="data.date"  />
-
+            <input type="text" class="input is-normal" id="name" v-model="data.name" />
+          <div v-if="hasError('name')" >
+            <sup class="red">{{ getErrorMessage('name') }}</sup>
+          </div>
+          <label for="url">Url</label>
+            <input type="text" class="input is-normal" id="url" v-model="data.url" />
+          <div v-if="hasError('url')">
+            <sup class="red" >{{ getErrorMessage('url') }}</sup>
+          </div>
             <label class="checkbox" for="active" >
               Active
-              <input type="checkbox" id="active" :value="data.active" />
+              <input type="checkbox" id="active" v-model="data.active" />
             </label>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success">Save changes</button>
+          <button class="button is-success" @click="saveJob">Save changes</button>
           <button class="button" @click="closeModal" aria-label="close">
             Cancel
           </button>
@@ -32,46 +34,54 @@
 
 <script>
 
+import _toast from '../mixins/toast'
 export default {
   name: "Modal",
   props: ['title', 'active', 'size' , 'theme', 'border-top'],
+  mixins: ['_toast'],
   data() {
     return {
-      date: this.formatDate(new Date()),
+      error:[],
       data:{
         name : "",
         url: "https://",
-        date: "",
-        active: true
+        active: false
       }
     }
   },
   methods: {
-    /**
-     * Emits close event to opened modal
-     */
     closeModal() {
       this.$emit('closeModal', false)
     },
 
-    padTo2Digits(num) {
-        return num.toString().padStart(2, '0');
+    setError(data){
+      this.error = data;
     },
 
-    formatDate(date) {
-      return (
-          [
-            date.getFullYear(),
-            this.padTo2Digits(date.getMonth() + 1),
-            this.padTo2Digits(date.getDate()),
-          ].join('-') +
-          ' ' +
-          [
-            this.padTo2Digits(date.getHours()),
-            this.padTo2Digits(date.getMinutes()),
-            this.padTo2Digits(date.getSeconds()),
-          ].join(':')
-      );
+    saveJob(){
+      var current = this;
+      axios.post('/api/job/create', this.data )
+          .then(function (response) {
+            current.closeModal();
+            current._toast(response.data.message, 'is-success')
+          })
+          .catch(function (error){
+            if(error.response) {
+              current.setError(error.response.data.details.violations);
+              current._toast(error.response.data.message, 'is-danger')
+            }
+          });
+    },
+
+    hasError(name){
+      if(this.error.length > 0 && this.error.find(data => data.field === name)) return true
+      else return false
+    },
+
+    getErrorMessage(name) {
+      if(this.error.length > 0 && this.error.find(data => data.field === name))
+        return  this.error.find(data => data.field === name).message
+
     }
 
   }

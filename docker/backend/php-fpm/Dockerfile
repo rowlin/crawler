@@ -1,7 +1,13 @@
-FROM php:7.4-rc-fpm
+FROM php:8.1-rc-fpm
 #ARG USER_ID
 #ARG GROUP_ID
+
 RUN docker-php-ext-install pdo_mysql mysqli
+#RUN docker-php-ext-install intl
+RUN docker-php-ext-install exif
+#RUN docker-php-ext-configure intl
+RUN docker-php-ext-configure exif
+
 #RUN docker-php-ext-enable xdebug
 #RUN usermod -u ${USER_ID} && groupmod -g ${GROUP_ID}
 ARG INSTALL_XDEBUG=false

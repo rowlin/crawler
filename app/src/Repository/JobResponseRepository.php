@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Jobs;
+use App\Entity\JobResponse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Jobs>
+ * @extends ServiceEntityRepository<JobResponse>
  *
- * @method Jobs|null find($id, $lockMode = null, $lockVersion = null)
- * @method Jobs|null findOneBy(array $criteria, array $orderBy = null)
- * @method Jobs[]    findAll()
- * @method Jobs[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method JobResponse|null find($id, $lockMode = null, $lockVersion = null)
+ * @method JobResponse|null findOneBy(array $criteria, array $orderBy = null)
+ * @method JobResponse[]    findAll()
+ * @method JobResponse[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class JobsRepository extends ServiceEntityRepository
+class JobResponseRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Jobs::class);
+        parent::__construct($registry, JobResponse::class);
     }
 
-    public function add(Jobs $entity, bool $flush = false): void
+    public function add(JobResponse $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class JobsRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Jobs $entity, bool $flush = false): void
+    public function remove(JobResponse $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -39,10 +39,8 @@ class JobsRepository extends ServiceEntityRepository
         }
     }
 
-
-
 //    /**
-//     * @return Jobs[] Returns an array of Jobs objects
+//     * @return JobResponse[] Returns an array of JobResponse objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -56,7 +54,7 @@ class JobsRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Jobs
+//    public function findOneBySomeField($value): ?JobResponse
 //    {
 //        return $this->createQueryBuilder('j')
 //            ->andWhere('j.exampleField = :val')
@@ -64,6 +62,5 @@ class JobsRepository extends ServiceEntityRepository
 //            ->getQuery()
 //            ->getOneOrNullResult()
 //        ;
-//    }JobResponse
-
+//    }
 }
