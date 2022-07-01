@@ -136,7 +136,7 @@ class Jobs
     public function getJob(): Collection
     {
         $criteria = \Doctrine\Common\Collections\Criteria::create()
-            ->orderBy(array('date'=> \Doctrine\Common\Collections\Criteria::ASC))
+            ->orderBy(array('date'=> \Doctrine\Common\Collections\Criteria::DESC))
             ->setMaxResults(20);
         return $this->job->matching($criteria);
     }

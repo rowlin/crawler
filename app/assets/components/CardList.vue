@@ -8,7 +8,7 @@
             <i v-else class="fas fa-stop red p-2"></i>
             {{ job.name}} [{{ job.url }}]
             </div>
-            <div v-if="showMore !== job.id &  showMore === null">
+            <div v-if="showMore !== job.id &&  showResult === null">
               <button class="button"  @click="run(job.id)"><i class="fas fa-play"></i></button>
               <button class="button is-success"  @click="setShowMore(job.id)">More</button>
             </div>
@@ -18,17 +18,18 @@
             </div>
         </div>
       </div>
-      <div class="card-content p-1">
+      <div class="card-content">
         <div class="content columns m-2">
           <div class="collumn " v-for="(response , index) in job.responses" :key="index">
-            <div class="p-2" :class="{green : (response.code === 200 & response.result.length > 3),
+            <div class="p-2 has-text-centered" :class="{green : (response.code === 200 & response.result.length > 3),
                           yellow : (response.code === 200 & response.result.length <= 3),
                           red : (response.code !== 200)}"
             @click="changeShowResult(job.id , response.id)"
             >
               {{ response.code}}
             </div>
-          </div>
+            <div class="rotate-45">{{ getDate(response.date)}}</div>
+            </div>
         </div>
 
           <div v-if="showResult !== null & showMore === job.id">
@@ -86,12 +87,17 @@ export default {
    },
   computed:{
     result(){
-      if(this.showMore & this.showResult)
+      if(this.showMore && this.showResult)
         try {
-          return JSON.stringify(JSON.parse(this.jobs.items.find(e => e.id === this.showMore)
+        var res =  JSON.stringify(JSON.parse(this.jobs.items.find(e => e.id === this.showMore)
               .responses.find(r => r.id === this.showResult).result), null, 2)
+          if(typeof res === 'undefined'){
+            res = this.jobs.items.find(e => e.id === this.showMore)
+                .responses.find(r => r.id === this.showResult).result;
+          }else
+            return  res;
         }catch(e){
-          if(e.message !== 'undefined')
+          if(typeof e.message !== 'undefined')
             return  e.message ;
           else return  'Parse error';
         }
@@ -126,27 +132,28 @@ export default {
     changeShowResult(job_id ,  response_id) {
         if (response_id !== null){
           this.showMore = job_id
-        if (this.showResult === response_id)
-          this.showResult = null;
-        else
           this.showResult = response_id
       }
     },
 
+    getDate(date){
+      var d = new Date(date);
+      return  d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +
+          d.getHours() + ":" + d.getMinutes();
+    },
     setShowMore(id) {
-     if(this.showMore ===  id)
-       this.showMore = null;
-     else{
+      this.showResult = null;
        this.showMore = id
-     }
     },
     async run(id){
+      var current = this;
       await axios.put(`/api/job/run/${id}`).then(
           res =>{
-            console.log(res);
+            current._toast(res.data.message ,'is-success' )
+            current.jobs = res.data.data
           },
           error => {
-            console.log(error);
+            current._toast(error.response.data.message ,'is-danger' )
           }
       )
     },
@@ -154,8 +161,10 @@ export default {
      var current = this;
        await axios.delete('/api/job/' + id).then(
           res => {
-            if(res.response)
-              current._toast(res.response.data.message ,'is-success' )
+            if(res.response) {
+              current._toast(res.response.data.message, 'is-success')
+              current.jobs = res.response.data.data;
+            }
             else
                current.getJobs()
           },
@@ -168,7 +177,11 @@ export default {
       var current = this
       await axios.patch(`api/job/${job.id}` , job).then(
           res => {
-            current._toast(res.statusText , 'is-success')
+            if(res.response) {
+              current._toast(res.response.data.messages, 'is-success')
+              current.jobs = res.response.data.data;
+              current.showMore = null;
+            }
           },
           error =>{
             if(error.response) current._toast(error.response.data.message, 'is-danger')
@@ -197,5 +210,10 @@ export default {
 .green-icon{
   color: green;
 }
-
+.rotate-45 {
+  transform: rotate(45deg);
+  text-align: center;
+  font-size: 13px;
+  margin-top: 12px;
+}
 </style>

@@ -35,7 +35,7 @@ class JobsService
        return  new JobsListResponse($items);
     }
 
-    public function createJob(JobCreateRequest  $request)  {
+    public function createJob(JobCreateRequest  $request) : array {
         $job = new Jobs();
         $job->setUrl($request->getUrl());
         $job->setName($request->getName());
@@ -43,32 +43,34 @@ class JobsService
         $job->setStartDate(null);
         $job->setActive($request->getActive());
         $this->jobsRepository->add($job , true);
-        return ['message' => "Job created"];//TODO: fix that
+        return ['message' => "Job created" , 'data' => $this->getJobs()];
     }
 
-    public function runJob(int $id){
+    public function runJob(int $id) : array{
         $current_job = $this->jobsRepository->findOneBy(['id' => $id]);
         $runner = new Runner();
         $result =  $runner->run($current_job);
         $this->jobResponseRepository->add($result , true);
-        return "OK";
+        return ['message' => "Job was run" , 'data' => $this->getJobs() ];
     }
 
-    public function updateJob(JobCreateRequest  $request,  int $id ) {
+    public function updateJob(JobCreateRequest  $request,  int $id ) : array {
         $current_job  = $this->jobsRepository->findOneBy(['id' => $id]);
         $current_job->setName($request->getName());
         $current_job->setUrl($request->getUrl());
         $current_job->setActive($request->getActive());
         $current_job->setCode($request->getCode());
         $this->jobsRepository->add($current_job , true);
+        return ['message' => "Job updated" , 'data' => $this->getJobs()];
     }
 
-    public function deleteJob( int $id){
+    public function deleteJob( int $id) : array{
         $current_job  = $this->jobsRepository->findOneBy(['id' => $id]);
         if($current_job)
             $this->jobsRepository->remove($current_job , true);
         else
             throw new JobNotFoundException();
+        return ['message' => "Job deleted" , 'data' => $this->getJobs() ];
     }
 
 

@@ -9,4 +9,5 @@
 import './styles/app.scss';
 // Import only what you need from Bulma
 import "../node_modules/@fortawesome/fontawesome-free/css/all.css";
+
 import './bootstrap';
