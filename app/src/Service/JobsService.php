@@ -1,23 +1,20 @@
 <?php
 namespace  App\Service;
 
-use App\Entity\JobResponse;
 use App\Entity\Jobs;
 use App\Exception\JobNotFoundException;
+use App\Jobs\Runner;
 use App\Model\JobsListItem;
 use App\Model\JobsListResponse;
 use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Requests\JobCreateRequest;
 use Doctrine\Common\Collections\Criteria;
-use phpDocumentor\Reflection\Types\Integer;
-use Symfony\Component\HttpClient\HttpClient;
 
 
 class JobsService
 {
-    public function __construct(private JobsRepository $jobsRepository,
-                                private JobResponseRepository $jobResponseRepository ){
+    public function __construct(private JobsRepository $jobsRepository , private JobResponseRepository $jobResponseRepository){
     }
 
     protected function map(Jobs $jobs) : JobsListItem{
@@ -51,23 +48,10 @@ class JobsService
 
     public function runJob(int $id){
         $current_job = $this->jobsRepository->findOneBy(['id' => $id]);
-       $client =  HttpClient::create();
-
-        $response = $client->request('POST', 'http://puppetter:3000/scrape' , [
-            'headers' => [
-                'Content-Type' => 'text/html',
-            ],
-            'body' => $current_job->getCode()]);
-
-        $job_response =  new JobResponse();
-        $job_response->setCode(  $response->getStatusCode())
-             ->setJob(  $current_job)
-             ->setResult($response->getContent())
-             ->setDate(new \DateTime('@'.strtotime('now')));
-        $this->jobResponseRepository->add($job_response , true);
-
+        $runner = new Runner();
+        $result =  $runner->run($current_job);
+        $this->jobResponseRepository->add($result , true);
         return "OK";
-
     }
 
     public function updateJob(JobCreateRequest  $request,  int $id ) {
