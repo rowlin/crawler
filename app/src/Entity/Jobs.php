@@ -49,6 +49,24 @@ class Jobs
      */
     private $active;
 
+
+    /**
+     *
+     * @ORM\Column(type="string" length=16 , options={"default" => "* * * * *" } )
+     */
+
+    private $cron;
+
+    public function getCron()
+    {
+        return $this->cron;
+    }
+
+    public function setCron($cron): void
+    {
+        $this->cron = $cron;
+    }
+
     /**
      * @ORM\OneToMany(targetEntity=JobResponse::class, mappedBy="job")
      */
