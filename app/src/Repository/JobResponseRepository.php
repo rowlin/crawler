@@ -21,6 +21,7 @@ class JobResponseRepository extends ServiceEntityRepository
         parent::__construct($registry, JobResponse::class);
     }
 
+
     public function add(JobResponse $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);

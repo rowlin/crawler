@@ -9,7 +9,6 @@ use App\Model\JobsListResponse;
 use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Requests\JobCreateRequest;
-use Doctrine\Common\Collections\Criteria;
 
 
 class JobsService
@@ -24,13 +23,14 @@ class JobsService
                 $jobs->getUrl(),
                 $jobs->getCode(),
                 $jobs->getStartDate(),
+                $jobs->getCron(),
                 $jobs->isActive(),
-                $jobs->getJob()->getValues()
+                $jobs->getJob(20)->getValues()
             );
    }
 
     public function getJobs() : JobsListResponse{
-       $jobs = $this->jobsRepository->findBy([] , ['id' => Criteria::DESC]);
+       $jobs = $this->jobsRepository->getAll(true);
        $items = array_map( [ $this ,'map']  , $jobs);
        return  new JobsListResponse($items);
     }

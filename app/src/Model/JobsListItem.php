@@ -19,20 +19,22 @@ class JobsListItem
 
     private $code;
 
-
     private $start_date;
+
+    private $cron;
 
     private $active;
 
     private $responses;
 
-    public function __construct($id, $name, $url, $code, $start_date, $active , $responses)
+    public function __construct($id, $name, $url, $code, $start_date, $cron , $active , $responses)
     {
         $this->id = $id;
         $this->name = $name;
         $this->url = $url;
         $this->code = $code;
         $this->start_date = $start_date;
+        $this->cron = $cron;
         $this->active = $active;
         $this->responses = $this->setResponses($responses);
     }
@@ -50,6 +52,14 @@ class JobsListItem
     public function getUrl() : string
     {
         return $this->url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCron()
+    {
+        return $this->cron;
     }
 
     public function getCode() : string

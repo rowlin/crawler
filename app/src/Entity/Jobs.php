@@ -49,10 +49,8 @@ class Jobs
      */
     private $active;
 
-
     /**
-     *
-     * @ORM\Column(type="string" length=16 , options={"default" => "* * * * *" } )
+     * @ORM\Column(type="string", length=16 , options={"default" = "* * * * *" } )
      */
 
     private $cron;
@@ -151,12 +149,17 @@ class Jobs
     /**
      * @return Collection <JobResponse>
      */
-    public function getJob(): Collection
+    public function getJob(int $max ): Collection
     {
-        $criteria = \Doctrine\Common\Collections\Criteria::create()
-            ->orderBy(array('date'=> \Doctrine\Common\Collections\Criteria::DESC))
-            ->setMaxResults(20);
-        return $this->job->matching($criteria);
+        if($max) {
+            $criteria = \Doctrine\Common\Collections\Criteria::create()
+                ->orderBy(array('date' => \Doctrine\Common\Collections\Criteria::DESC))
+                ->setMaxResults(20);
+            $res =  $this->job->matching($criteria);
+        }else {
+            $res  = $this->job;
+        }
+        return  $res;
     }
 
 

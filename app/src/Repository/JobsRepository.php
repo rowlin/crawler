@@ -29,6 +29,14 @@ class JobsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function getAll(bool $active = true) :array{
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.active = :active')
+            ->setParameter('active', $active)
+            ->orderBy('p.id', 'DESC');
+        $query = $qb->getQuery();
+        return  $query->execute();
+    }
 
     public function remove(Jobs $entity, bool $flush = false): void
     {

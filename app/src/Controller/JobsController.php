@@ -6,7 +6,6 @@ use App\Attribute\RequestBody;
 use App\Requests\JobCreateRequest;
 use App\Service\JobsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\HttpFoundation\Response;
