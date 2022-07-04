@@ -4,6 +4,21 @@
 $control-border-width: 2px;
 $input-border-color: rgba(71, 69, 69, 0.8);
 
+.is-danger{
+  background-color: red ;
+  padding: 15px;
+}
+
+.is-success{
+  background-color: #00c4a7;
+  padding: 15px;
+}
+
+.red{
+  color: red;
+}
+
+
 // Import only what you need from Bulma
 @import "../../node_modules/bulma/sass/utilities/_all.sass";
 @import "../../node_modules/bulma/sass/base/_all.sass";
