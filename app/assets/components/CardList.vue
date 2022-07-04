@@ -10,10 +10,10 @@
             </div>
             <div v-if="showMore !== job.id &&  showResult === null">
               <button class="button"  @click="run(job.id)"><i class="fas fa-play"></i></button>
-              <button class="button is-success"  @click="setShowMore(job.id)">More</button>
+              <button class="button is-info"  @click="setShowMore(job.id)">...</button>
             </div>
             <div v-else>
-              <button class="button"  @click="showMore = null">Cancel</button>
+              <button class="button"  @click="showMore = null ; showResult = null">Cancel</button>
               <button class="button is-success"  @click="update(job)">Save</button>
             </div>
         </div>
@@ -28,7 +28,7 @@
             >
               {{ response.code}}
             </div>
-            <div class="rotate-45">{{ getDate(response.date)}}</div>
+            <div class="rotate-45" @click="changeShowResult(job.id , response.id)">{{ getDate(response.date)}}</div>
             </div>
         </div>
 
@@ -55,8 +55,6 @@
                   <img src="/images/cron.png">
               </div>
             </div>
-
-
           </div>
 
         <div v-if="showMore === job.id & showResult === null "  ref="box" >

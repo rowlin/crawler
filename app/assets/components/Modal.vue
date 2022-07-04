@@ -49,6 +49,9 @@ export default {
       }
     }
   },
+  created() {
+    this.error = [];
+  },
   methods: {
     closeModal() {
       this.$emit('closeModal', false)

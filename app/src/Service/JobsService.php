@@ -41,6 +41,7 @@ class JobsService
         $job->setName($request->getName());
         $job->setCode($request->getCode());
         $job->setStartDate(null);
+        $job->setCron($request->getCron());
         $job->setActive($request->getActive());
         $this->jobsRepository->add($job , true);
         return ['message' => "Job created" , 'data' => $this->getJobs()];
@@ -60,6 +61,7 @@ class JobsService
         $current_job->setUrl($request->getUrl());
         $current_job->setActive($request->getActive());
         $current_job->setCode($request->getCode());
+        $current_job->setCron($request->getCron());
         $this->jobsRepository->add($current_job , true);
         return ['message' => "Job updated" , 'data' => $this->getJobs()];
     }

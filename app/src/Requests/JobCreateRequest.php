@@ -18,6 +18,20 @@ class JobCreateRequest
     #[Url]
     private string $url;
 
+    #[NotBlank]
+    private string $cron;
+
+    public function setCron(string $cron): void
+    {
+        $this->cron = $cron;
+    }
+
+    public function getCron(): string
+    {
+        return $this->cron;
+    }
+
+
     public function getName(): string
     {
         return $this->name;
