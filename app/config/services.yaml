@@ -6,8 +6,9 @@
 parameters:
     exceptions:
         Symfony\Component\HttpKernel\Exception\NotFoundHttpException: { code: 404 }
-        App\Exception\JobNotFoundException: { code: 404, hidden: false }
+        App\Exception\JobNotFoubndException: { code: 404, hidden: false }
         App\Exception\RequestBodyConvertException: { code: 400, hidden: false }
+        App\Exception\CronException: { code: 500, hidden: false }
 
 services:
     # default configuration for services in *this* file

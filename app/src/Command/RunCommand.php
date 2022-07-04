@@ -53,10 +53,17 @@ class RunCommand extends Command
         $jobs_list =  $jobs_rep->findBy(['active' => true]);
 
         foreach ($jobs_list as $job){
-            $runner =  new Runner();
-            $rep =  $this->entityManager->getRepository(JobResponse::class);
-            $rep->add($runner->run($job), true);
-            $io->info('added : ' . $job->getId() );
+            if($job->isActive() === true) {
+                 $cron  = new CronResolver($job->getCron());
+                if($cron->getResult()) {
+                    $runner = new Runner();
+                    $rep = $this->entityManager->getRepository(JobResponse::class);
+                    $rep->add($runner->run($job), true);
+                    $io->info('added : ' . $job->getId());
+                }else{
+                    $io->info('skipped : ' . $job->getId());
+                }
+            }
         }
         $io->success('Ok');
 

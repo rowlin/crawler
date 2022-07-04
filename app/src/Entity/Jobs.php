@@ -55,7 +55,7 @@ class Jobs
 
     private $cron;
 
-    public function getCron()
+    public function getCron() : string
     {
         return $this->cron;
     }

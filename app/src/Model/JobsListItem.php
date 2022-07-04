@@ -54,9 +54,6 @@ class JobsListItem
         return $this->url;
     }
 
-    /**
-     * @return mixed
-     */
     public function getCron()
     {
         return $this->cron;

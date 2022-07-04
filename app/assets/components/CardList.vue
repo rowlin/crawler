@@ -42,8 +42,21 @@
             <input type="text" id="name" class="input" v-model="job.name">
             <label for="url">Url:</label>
             <input type="text" id="url" class="input" v-model="job.url">
-            <label for="active" class="checkbox">Active</label>
-            <input type="checkbox" id="active" v-model="job.active">
+            <div class="columns">
+              <div class="column">
+                <label for="active" class="checkbox">Active</label>
+                <input type="checkbox" id="active" v-model="job.active">
+                <br>
+                <label for="cron">Cron:</label>
+                <input type="text" class="input" id="cron" v-model="job.cron">
+
+              </div>
+              <div class="column">
+                  <img src="/images/cron.png">
+              </div>
+            </div>
+
+
           </div>
 
         <div v-if="showMore === job.id & showResult === null "  ref="box" >
@@ -177,9 +190,9 @@ export default {
       var current = this
       await axios.patch(`api/job/${job.id}` , job).then(
           res => {
-            if(res.response) {
-              current._toast(res.response.data.messages, 'is-success')
-              current.jobs = res.response.data.data;
+            if(res.data) {
+              current._toast(res.data.message, 'is-success')
+              current.jobs = res.data.data;
               current.showMore = null;
             }
           },
