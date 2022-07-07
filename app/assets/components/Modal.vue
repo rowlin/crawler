@@ -3,7 +3,7 @@
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Create new Job</p>
+          <p class="modal-card-title">{{ title }}</p>
           <button class="delete modal-close-btn" @click="closeModal" aria-label="close"> X</button>
         </header>
         <section class="modal-card-body">

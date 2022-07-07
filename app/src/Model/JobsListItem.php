@@ -19,22 +19,25 @@ class JobsListItem
 
     private $code;
 
-    private $start_date;
-
     private $cron;
+
+    private $notity;
+
+    private $channel;
 
     private $active;
 
     private $responses;
 
-    public function __construct($id, $name, $url, $code, $start_date, $cron , $active , $responses)
+    public function __construct($id, $name, $url, $code, $cron ,$notify , $channel , $active , $responses)
     {
         $this->id = $id;
         $this->name = $name;
         $this->url = $url;
         $this->code = $code;
-        $this->start_date = $start_date;
         $this->cron = $cron;
+        $this->notify = $notify;
+        $this->channel = $channel;
         $this->active = $active;
         $this->responses = $this->setResponses($responses);
     }
@@ -64,11 +67,6 @@ class JobsListItem
         return $this->code;
     }
 
-    public function getStartDate()
-    {
-        return $this->start_date;
-    }
-
     public function getActive()
     {
         return $this->active;
@@ -77,6 +75,17 @@ class JobsListItem
     public function getResponses()
     {
         return $this->responses;
+    }
+
+
+    public function getNotity() : bool
+    {
+        return $this->notity;
+    }
+
+    public function getChannel()
+    {
+        return $this->channel;
     }
 
     private function setResponses($resp): array{

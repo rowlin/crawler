@@ -29,7 +29,7 @@ class JobsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-    public function getAll(bool $active = true) :array{
+    public function getAll(bool $active) :array{
         $qb = $this->createQueryBuilder('p')
             ->where('p.active = :active')
             ->setParameter('active', $active)

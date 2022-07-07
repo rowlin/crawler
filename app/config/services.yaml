@@ -6,7 +6,7 @@
 parameters:
     exceptions:
         Symfony\Component\HttpKernel\Exception\NotFoundHttpException: { code: 404 }
-        App\Exception\JobNotFoubndException: { code: 404, hidden: false }
+        App\Exception\NotFoubndException: { code: 404, hidden: false }
         App\Exception\RequestBodyConvertException: { code: 400, hidden: false }
         App\Exception\CronException: { code: 500, hidden: false }
 

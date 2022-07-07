@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-for="job in jobs.items"  :key="job.id" class="card mt-3">
+    <div v-for="job in $root.jobs.items"  :key="job.id" class="card mt-3">
       <div class="card-header">
         <div class="card-header-title is-flex is-justify-content-space-between">
             <div>
@@ -72,8 +72,9 @@
 </template>
 
 <script>
-
-import _toast from '../mixins/toast';
+import Store from '../store'
+import  _toast   from '../mixins/toast';
+import  getJobs   from '../mixins/toast';
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles
 
@@ -87,23 +88,22 @@ export default {
     return {
       showResult:null,
       showMore: null,
-      jobs: {},
       width: '1040px',
     }
   },
-  mixins:[ '_toast'],
+  mixins:[ '_toast' , 'getJobs'],
   components:{PrismEditor},
-  async created() {
+  async mounted() {
     await this.getJobs()
    },
   computed:{
     result(){
       if(this.showMore && this.showResult)
         try {
-        var res =  JSON.stringify(JSON.parse(this.jobs.items.find(e => e.id === this.showMore)
+        var res =  JSON.stringify(JSON.parse(this.$root.jobs.items.find(e => e.id === this.showMore)
               .responses.find(r => r.id === this.showResult).result), null, 2)
           if(typeof res === 'undefined'){
-            res = this.jobs.items.find(e => e.id === this.showMore)
+            res = this.$root.jobs.items.find(e => e.id === this.showMore)
                 .responses.find(r => r.id === this.showResult).result;
           }else
             return  res;
@@ -116,13 +116,6 @@ export default {
 
   },
   methods:{
-    async getJobs(){
-      this.jobs =  await axios.get('/api/jobs').then(
-          data => {
-            return data.data
-          })
-    },
-
     highlight(code) {
       return highlight(
           code,

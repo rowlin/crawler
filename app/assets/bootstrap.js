@@ -10,6 +10,10 @@ Vue.component('modal', require('./components/Modal').default )
 Vue.component('topPanel', require('./components/TopPanel').default )
 Vue.component('cardList', require('./components/CardList').default )
 
+//maybe better to use vuex
+import Store from './store'
+
 new Vue({
+    data: Store,
     el: '#app',
 })

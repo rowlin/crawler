@@ -6,6 +6,7 @@ use App\Repository\JobsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -18,58 +19,59 @@ class Jobs
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private  $id;
+    private  int $id;
 
     /**
      *
      * @ORM\Column(type="string", length=255)
      */
-    private $url;
+    private string $url;
 
     /**
      * @Assert\Blank()
      * @ORM\Column(type="string", length=60)
      */
-    private $name;
+    private string $name;
 
     /**
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $code;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $start_date;
+    private ?string $code;
 
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="boolean")
      */
-    private $active;
+    private bool $active;
+
+
+    /**
+     * @Assert\NotBlank
+     * @ORM\Column(type="boolean")
+     */
+
+    private bool $notify;
+
+
+    /**
+     * @ORM\OneToOne(targetEntity="BotChannel" )
+     * @ORM\Column(nullable=true)
+     */
+    private ?int $channel_id;
 
     /**
      * @ORM\Column(type="string", length=16 , options={"default" = "* * * * *" } )
      */
 
-    private $cron;
-
-    public function getCron() : string
-    {
-        return $this->cron;
-    }
-
-    public function setCron($cron): void
-    {
-        $this->cron = $cron;
-    }
+    private string $cron;
 
     /**
      * @ORM\OneToMany(targetEntity=JobResponse::class, mappedBy="job")
      */
-    private $job;
+    private Collection $job;
 
+    #[Pure]
     public function __construct()
     {
         $this->job = new ArrayCollection();
@@ -94,7 +96,6 @@ class Jobs
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -106,7 +107,6 @@ class Jobs
     public function setUrl(string $url): self
     {
         $this->url = $url;
-
         return $this;
     }
 
@@ -118,19 +118,6 @@ class Jobs
     public function setCode(?string $code): self
     {
         $this->code = $code;
-
-        return $this;
-    }
-
-    public function getStartDate(): ?\DateTimeInterface
-    {
-        return $this->start_date;
-    }
-
-    public function setStartDate(?\DateTimeInterface $start_date): self
-    {
-        $this->start_date = $start_date;
-
         return $this;
     }
 
@@ -142,7 +129,39 @@ class Jobs
     public function setActive(bool $active): self
     {
         $this->active = $active;
+        return $this;
+    }
 
+    public function getCron() : string
+    {
+        return $this->cron;
+    }
+
+    public function setCron($cron): self
+    {
+        $this->cron = $cron;
+        return $this;
+    }
+
+    public function isNotify(): bool
+    {
+        return $this->notify;
+    }
+
+    public function setNotify( $notify): self
+    {
+        $this->notify = $notify;
+        return $this;
+    }
+
+    public function getChannel() : ?int
+    {
+        return $this->channel_id;
+    }
+
+    public function setChannel(mixed $channel_id): self
+    {
+        $this->channel_id = $channel_id;
         return $this;
     }
 

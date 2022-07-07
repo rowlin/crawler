@@ -9,8 +9,6 @@ use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
-
-
     private $faker;
 
     public function __construct() {
@@ -22,8 +20,9 @@ class AppFixtures extends Fixture
             $job->setName($this->faker->name());
             $job->setUrl($this->faker->url());
             $job->setCode($this->faker->text(1000));
-            $job->setStartdate($this->faker->dateTime());
             $job->setActive($this->faker->boolean());
+            $job->setCron('* * * * *');
+            $job->setNotify($this->faker->boolean());
         return $job;
     }
 

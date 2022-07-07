@@ -11,6 +11,12 @@ Vue.mixin({
                     dismissible: true,
                     closeOnClick: true,
                 })
-            }
+            },
+        async getJobs(){
+            this.$root.jobs =  await axios.get('/api/jobs?active='+ this.$root.active_job).then(
+                data => {
+                    return data.data
+                })
+        },
 }
 })

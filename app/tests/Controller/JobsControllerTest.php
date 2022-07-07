@@ -15,31 +15,34 @@ class JobsControllerTest extends WebTestCase
         $this->faker = Factory::create();
     }
 
-/*    public function testCreate():void
+    public function testIndex(): void
     {
-        $client = self::createClient();
-        $client->request("POST" , '/api/job/create',[
-            'name' => $this->faker->name(),
-            'url' => $this->faker->url(),
-            'active' => 1
-        ]);
-        $response  = $client->getResponse()->getContent();
-        dd($response);
-        $this->assertEquals('200', $client->getResponse()->getStatusCode());
+        $client = static::createClient();
+
+        $crawler = $client->request('GET', '/');
+        $this->assertResponseIsSuccessful();
+    }
 
 
-    }*/
+   public function testCreate() : void
+   {
+       $client = static::createClient();
+       $crawler =  $client->request('POST' , '/api/job/create',[]);
+
+       dd($client->getResponse());
+       //$this->assertResponseIsSuccessful();
+
+       //$this->assertEquals('200', $crawler->getResponse()->getStatusCode());
+    }
 
     public function testDelete(){
 
-        $client = self::createClient();
+        $client = static::createClient();
         $client->request("DELETE" , '/api/job/',[
             'name' => $this->faker->name(),
             'url' => $this->faker->url(),
             'active' => 1
         ]);
-
-
 
     }
 

@@ -2,13 +2,14 @@
 namespace  App\Service;
 
 use App\Entity\Jobs;
-use App\Exception\JobNotFoundException;
+use App\Exception\NotFoundException;
 use App\Jobs\Runner;
 use App\Model\JobsListItem;
 use App\Model\JobsListResponse;
 use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Requests\JobCreateRequest;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class JobsService
@@ -22,15 +23,19 @@ class JobsService
                 $jobs->getName(),
                 $jobs->getUrl(),
                 $jobs->getCode(),
-                $jobs->getStartDate(),
                 $jobs->getCron(),
+                $jobs->isNotify(),
+                $jobs->getChannel(),
                 $jobs->isActive(),
                 $jobs->getJob(20)->getValues()
             );
    }
 
-    public function getJobs() : JobsListResponse{
-       $jobs = $this->jobsRepository->getAll(true);
+    public function getJobs(Request $request = null) : JobsListResponse{
+        $active = true;
+        if($request->query->has('active'))
+            $active = (bool) filter_var($request->query->get('active'), FILTER_VALIDATE_BOOLEAN);
+       $jobs = $this->jobsRepository->getAll($active);
        $items = array_map( [ $this ,'map']  , $jobs);
        return  new JobsListResponse($items);
     }
@@ -40,18 +45,23 @@ class JobsService
         $job->setUrl($request->getUrl());
         $job->setName($request->getName());
         $job->setCode($request->getCode());
-        $job->setStartDate(null);
         $job->setCron($request->getCron());
         $job->setActive($request->getActive());
+        $job->setNotify($request->isNotify());
+        $job->setChannel(null);
         $this->jobsRepository->add($job , true);
         return ['message' => "Job created" , 'data' => $this->getJobs()];
     }
 
     public function runJob(int $id) : array{
         $current_job = $this->jobsRepository->findOneBy(['id' => $id]);
-        $runner = new Runner();
-        $result =  $runner->run($current_job);
-        $this->jobResponseRepository->add($result , true);
+        if(!$current_job){
+            throw new NotFoundException();
+        }else {
+            $runner = new Runner();
+            $result = $runner->run($current_job);
+            $this->jobResponseRepository->add($result, true);
+        }
         return ['message' => "Job was run" , 'data' => $this->getJobs() ];
     }
 
@@ -71,7 +81,7 @@ class JobsService
         if($current_job)
             $this->jobsRepository->remove($current_job , true);
         else
-            throw new JobNotFoundException();
+            throw new NotFoundException();
         return ['message' => "Job deleted" , 'data' => $this->getJobs() ];
     }
 

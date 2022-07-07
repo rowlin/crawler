@@ -18,6 +18,9 @@ $input-border-color: rgba(71, 69, 69, 0.8);
   color: red;
 }
 
+.green{
+  color: green;
+}
 
 // Import only what you need from Bulma
 @import "../../node_modules/bulma/sass/utilities/_all.sass";
@@ -40,6 +43,7 @@ $input-border-color: rgba(71, 69, 69, 0.8);
 @import "../../node_modules/bulma/sass/form/select.sass";
 @import "../../node_modules/bulma/sass/components/card.sass";
 @import "../../node_modules/bulma/sass/components/modal.sass";
+@import "../../node_modules/bulma/sass/components/level.sass";
 @import "../../node_modules/bulma/sass/components/navbar.sass";
 @import "../../node_modules/bulma/sass/layout/section.sass";
 

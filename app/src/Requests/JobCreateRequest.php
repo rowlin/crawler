@@ -18,8 +18,10 @@ class JobCreateRequest
     #[Url]
     private string $url;
 
-    #[NotBlank]
-    private string $cron;
+    private bool $notify = false;
+
+
+    private string $cron = "* * * * *";
 
     public function setCron(string $cron): void
     {
@@ -71,4 +73,15 @@ class JobCreateRequest
     {
         $this->url = $url;
     }
+
+    public function isNotify(): bool
+    {
+        return $this->notify;
+    }
+
+    public function setNotify(bool $notify): void
+    {
+        $this->notify = $notify;
+    }
+
 }
