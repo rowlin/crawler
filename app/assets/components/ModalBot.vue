@@ -12,7 +12,7 @@
          <div class="column">
            <label for="selected_bot">Select bot or <span class="green pointer" @click="setEmptyBot">add new</span> </label>
             <select v-model="bot" id="selected_bot" class="select is-fullwidth" @change="channel = null; switch_act = 'bot'">
-              <option v-for="b in bots" :key="b.id" :value="b">
+              <option v-for="b in $root.bots" :key="b.id" :value="b">
                 {{ b.name }}
               </option>
             </select>
@@ -21,7 +21,7 @@
             <label for="selected_channel">Select channel or <span class="green pointer" @click="setEmptyChannel">add new</span></label>
             <select  v-model="channel" id="selected_channel" class="select is-fullwidth" @change="bot = null ; switch_act = 'channel'"
             >
-            <option v-for="(channel , index) in channels" :key="index" :value="channel">
+            <option v-for="(channel , index) in $root.channels" :key="index" :value="channel">
               {{ channel.name }}
             </option>
           </select>
@@ -88,15 +88,14 @@
 </template>
 
 <script>
+import Store from '../store'
 export default {
   name: "ModalBot",
   props: ['title', 'active', 'size' , 'theme', 'border-top'],
-  mixins: ['_toast'],
+  mixins: ['_toast' , 'getBots' , 'getChannels'],
   data() {
     return {
       error:[],
-      bots:[],
-      channels:[],
       switch_act : 'bot',
       bot:{
         name: "",
@@ -111,9 +110,8 @@ export default {
   },
   async created() {
     this.error = [];
-    this.bots = await axios.get('api/bot').then(res => {return res.data})
-    this.channels =  await axios.get('api/channels').then(res => {return res.data})
-
+    await this.getBots();
+    await this.getChannels();
   },
   methods: {
     setEmptyBot(){
@@ -124,7 +122,6 @@ export default {
       }
       this.switch_act = 'bot'
     },
-
     setEmptyChannel(){
       this.channel = {
         name: "",
@@ -138,7 +135,8 @@ export default {
     },
 
     setError(data){
-      this.error = data;
+      if(typeof data !== 'undefined')
+        this.error = data;
     },
 
     updateBot(){
@@ -146,6 +144,7 @@ export default {
       axios.patch("/api/bot/update/" + this.bot.id, this.bot )
           .then(function (response) {
             current._toast(response.data.message, 'is-success')
+            current.getBots();
           })
           .catch(function (error){
             if(error.response) {
@@ -153,69 +152,87 @@ export default {
               current._toast(error.response.data.message, 'is-danger')
             }
           });
+      this.$nextTick();
     },
     deleteBot(){
       var current = this;
-      axios.delete("/api/bot/" + this.bot.id, this.bot )
+       axios.delete("/api/bot/" + this.bot.id, this.bot )
           .then(function (response) {
             current._toast(response.data.message, 'is-success')
+            current.getBots();
           })
           .catch(function (error){
             if(error.response) {
               current._toast(error.response.data.message, 'is-danger')
             }
           });
+      this.$nextTick();
+      this.setEmptyBot();
     },
     saveBot(){
       var current = this;
-      axios.post("/api/bot/create/", this.bot )
+      axios.post("/api/bot/create", this.bot )
           .then(function (response) {
-            current._toast(response.data.message, 'is-success')
+            current._toast(response.data.message, 'is-success');
+            current.getBots();
+            this.closeModal();
           })
           .catch(function (error){
-            if(error.response) {
-              current.setError(error.response.data.details.violations);
+            if(error.response.data) {
+              if(error.response.data.details.violations)
+                current.setError(error.response.data.details.violations);
               current._toast(error.response.data.message, 'is-danger')
             }
           });
+      this.$nextTick();
     },
     updateChannel(){
       var current = this;
       axios.patch("/api/channel/update/" + this.channel.id, this.channel )
           .then(function (response) {
             current._toast(response.data.message, 'is-success')
+            current.getChannels();
           })
           .catch(function (error){
-            if(error.response) {
-              current.setError(error.response.data.details.violations);
+            if(error.response.data) {
+              if(error.response.data.details.violations)
+                current.setError(error.response.data.details.violations);
               current._toast(error.response.data.message, 'is-danger')
             }
           });
+      this.$nextTick();
     },
     deleteChannel(){
       var current = this;
       axios.delete("/api/channel/" + this.channel.id, this.channel )
           .then(function (response) {
-            current._toast(response.data.message, 'is-success')
+            current._toast(response.data.message, 'is-success');
+            current.getChannels()
           })
           .catch(function (error){
             if(error.response) {
               current._toast(error.response.data.message, 'is-danger')
             }
           });
+      this.$nextTick();
+      this.setEmptyChannel();
     },
     saveChannel(){
       var current = this;
-      axios.post("/api/channel/create/", this.channel )
+      axios.post("/api/channel/create", this.channel )
           .then(function (response) {
-            current._toast(response.data.message, 'is-success')
+            current._toast(response.data.message, 'is-success');
+            current.getChannels();
+            current.closeModal();
           })
           .catch(function (error){
-            if(error.response) {
-              current.setError(error.response.data.details.violations);
+            if(error.response.data) {
+              if(error.response.data.details.violations)
+                current.setError(error.response.data.details.violations);
               current._toast(error.response.data.message, 'is-danger')
             }
           });
+      this.$nextTick();
     },
 
     hasError(name){
@@ -226,7 +243,6 @@ export default {
     getErrorMessage(name) {
       if(this.error.length > 0 && this.error.find(data => data.field === name))
         return  this.error.find(data => data.field === name).message
-
     }
 
   }

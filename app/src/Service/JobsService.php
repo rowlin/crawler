@@ -33,7 +33,7 @@ class JobsService
 
     public function getJobs(Request $request = null) : JobsListResponse{
         $active = true;
-        if($request->query->has('active'))
+        if(is_object($request) && $request->query->has('active'))
             $active = (bool) filter_var($request->query->get('active'), FILTER_VALIDATE_BOOLEAN);
        $jobs = $this->jobsRepository->getAll($active);
        $items = array_map( [ $this ,'map']  , $jobs);

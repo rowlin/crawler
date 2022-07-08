@@ -18,5 +18,14 @@ Vue.mixin({
                     return data.data
                 })
         },
-}
+        async  getBots(){
+            this.$root.bots = await axios.get('api/bot').then(res => {return res.data})
+        },
+
+        async getChannels(){
+            this.$root.channels =  await axios.get('api/channels').then(res => {return res.data})
+        },
+
+
+    }
 })
