@@ -34,6 +34,12 @@ class Bot
      */
     private $active;
 
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_webhook;
+
     /**
      * @ORM\OneToMany(targetEntity=BotChannel::class, mappedBy="bots" )
      */
@@ -92,6 +98,19 @@ class Bot
     {
         return $this->channels;
     }
+
+    public function getIsWebhook() : bool
+    {
+        return $this->is_webhook;
+    }
+
+    public function setIsWebhook($is_webhook): self
+    {
+        $this->is_webhook = $is_webhook;
+
+        return $this;
+    }
+
 
     public function addChannel(Channel $channel): self
     {

@@ -39,6 +39,19 @@ class BotRepository extends ServiceEntityRepository
         }
     }
 
+    public function selectTokensList(){
+        $transform = function($item) {
+            return $item['token'];
+        };
+
+        return array_map($transform, $this->createQueryBuilder('b')
+            ->select('b.token')
+            ->where('b.active = true')
+            ->getQuery()
+            ->getResult());
+    }
+
+
 //    /**
 //     * @return Bot[] Returns an array of Bot objects
 //     */

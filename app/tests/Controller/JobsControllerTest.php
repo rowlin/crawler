@@ -2,8 +2,6 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\Jobs;
-use App\Repository\JobsRepository;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -23,18 +21,26 @@ class JobsControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
     }
 
+    public function testGetJob() : void{
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/api/jobs');
+        $this->assertResponseIsSuccessful();
+    }
+
 
    public function testCreate() : void
    {
+
        $client = static::createClient();
        $crawler =  $client->request('POST' , '/api/job/create',[]);
 
        dd($client->getResponse());
+
        //$this->assertResponseIsSuccessful();
 
        //$this->assertEquals('200', $crawler->getResponse()->getStatusCode());
     }
-
+/*
     public function testDelete(){
 
         $client = static::createClient();
@@ -44,7 +50,7 @@ class JobsControllerTest extends WebTestCase
             'active' => 1
         ]);
 
-    }
+    }*/
 
 
 }

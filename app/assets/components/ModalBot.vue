@@ -42,6 +42,16 @@
             Active
             <input type="checkbox" id="active" v-model="bot.active" />
           </label>
+
+          <div class="pt-2" @click="bot.is_webhook = !bot.is_webhook">
+            <label class="checkbox" for="is_webhook" >Webhook</label>
+              <span id="is_webhook" v-if="bot.is_webhook">
+                <span class="green" >Active</span>
+              </span>
+              <span v-else>
+                <span class="red" >UnActive</span>
+              </span>
+          </div>
         </div>
         <div v-else>
           <label for="channel_name">Name</label>
@@ -101,6 +111,7 @@ export default {
         name: "",
         token: "",
         active: true,
+        is_webhook: false
       },
       channel:{
         name: "",
@@ -119,6 +130,7 @@ export default {
         name: "",
         token: "",
         active: true,
+        is_webhook: false
       }
       this.switch_act = 'bot'
     },

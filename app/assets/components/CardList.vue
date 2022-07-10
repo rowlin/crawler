@@ -37,7 +37,7 @@
                 {{ result }}
               </pre>
           </div>
-          <div  v-if="showMore === job.id & showResult === null  " >
+          <div  v-if="showMore === job.id & showResult === null" >
             <label for="name">Name:</label>
             <input type="text" id="name" class="input" v-model="job.name">
             <label for="url">Url:</label>
@@ -55,7 +55,36 @@
                   <img src="/images/cron.png">
               </div>
             </div>
+
+            <div>
+              <label for="has_notify">Notify</label>
+              <input type="checkbox" id="has_notify" v-model="job.notify">
+              <div class="columns" v-if="job.notify">
+                 <div class="column">
+                  <label for="bot_notify">Bot for  notify</label>
+                  <select  id="bot_notify" class="input">
+                    <option value="">Select bot</option>
+                    <option v-for="(bot , index)  in $root.bots" :key="index" :value="bot.id">
+                      {{ bot.name }}
+                    </option>
+                  </select>
+                 </div>
+                  <div class="column">
+                  <label for="channel_notify">Channel for notify</label>
+                  <select  id="channel_notify" class="input">
+                    <option value="">Select channel</option>
+                    <option v-for="(channel , index)  in $root.channels" :key="index" :value="channel.id">
+                      {{ channel.name }}
+                    </option>
+                  </select>
+                  </div>
+              </div>
+            </div>
+
           </div>
+
+
+
 
         <div v-if="showMore === job.id & showResult === null "  ref="box" >
           <prism-editor id="my-editor" :width="matchWidth" v-model="job.code" :highlight="highlighter" line-numbers></prism-editor>
@@ -154,12 +183,14 @@ export default {
       await axios.put(`/api/job/run/${id}`).then(
           res =>{
             current._toast(res.data.message ,'is-success' )
-            current.jobs = res.data.data
+            current.$root.jobs = res.data.data
           },
           error => {
             current._toast(error.response.data.message ,'is-danger' )
           }
       )
+      this.$nextTick();
+
     },
     async deleteJob(id){
      var current = this;
@@ -167,7 +198,7 @@ export default {
           res => {
             if(res.response) {
               current._toast(res.response.data.message, 'is-success')
-              current.jobs = res.response.data.data;
+              current.$root.jobs = res.response.data.data;
             }
             else
                current.getJobs()
@@ -183,7 +214,7 @@ export default {
           res => {
             if(res.data) {
               current._toast(res.data.message, 'is-success')
-              current.jobs = res.data.data;
+              current.$root.jobs = res.data.data;
               current.showMore = null;
             }
           },

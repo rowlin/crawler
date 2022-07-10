@@ -18,6 +18,9 @@ class BotCreateRequest
     #[NotBlank]
     private mixed $active;
 
+    private bool $is_webhook;
+
+
     public function getName(): string
     {
         return $this->name;
@@ -46,6 +49,16 @@ class BotCreateRequest
     public function setActive(mixed $active): void
     {
         $this->active = $active;
+    }
+
+    public function getIsWebhook(): bool
+    {
+        return $this->is_webhook;
+    }
+
+    public function setIsWebhook(bool $is_webhook): void
+    {
+        $this->is_webhook = $is_webhook;
     }
 
 }
