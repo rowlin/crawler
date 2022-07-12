@@ -20,8 +20,9 @@ class JobCreateRequest
 
     private bool $notify = false;
 
-
     private string $cron = "* * * * *";
+
+    private array $channel;
 
     public function setCron(string $cron): void
     {
@@ -32,7 +33,6 @@ class JobCreateRequest
     {
         return $this->cron;
     }
-
 
     public function getName(): string
     {
@@ -83,5 +83,16 @@ class JobCreateRequest
     {
         $this->notify = $notify;
     }
+
+    public function getChannel(): array
+    {
+        return $this->channel;
+    }
+
+    public function setChannel(array $channel): void
+    {
+        $this->channel = $channel;
+    }
+
 
 }

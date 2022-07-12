@@ -200,7 +200,7 @@ export default {
     },
     updateChannel(){
       var current = this;
-      axios.patch("/api/channel/update/" + this.channel.id, this.channel )
+      axios.patch("/api/channel/" + this.channel.id, this.channel )
           .then(function (response) {
             current._toast(response.data.message, 'is-success')
             current.getChannels();

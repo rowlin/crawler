@@ -29,10 +29,9 @@ class JobsService
                 $jobs->getUrl(),
                 $jobs->getCode(),
                 $jobs->getCron(),
-                $jobs->isNotify(),
                 $jobs->getChannel(),
                 $jobs->isActive(),
-                $jobs->getJob(20)->getValues()
+                $jobs->getJob(20)->getValues(),
             );
    }
 
@@ -52,8 +51,6 @@ class JobsService
         $job->setCode($request->getCode());
         $job->setCron($request->getCron());
         $job->setActive($request->getActive());
-        $job->setNotify($request->isNotify());
-        $job->setChannel(null);
         $this->jobsRepository->add($job , true);
         return ['message' => "Job created" , 'data' => $this->getJobs()];
     }
@@ -83,7 +80,14 @@ class JobsService
         $current_job->setActive($request->getActive());
         $current_job->setCode($request->getCode());
         $current_job->setCron($request->getCron());
+        $res = null;
+        if( isset($request->getChannel()['bot_id']) & !empty($request->getChannel()['bot_id'])) {
+            $res = $this->jobResponseRepository->addBotChannel($request->getChannel()['bot_id'] , $request->getChannel()['channel_id'] );
+        }
+        $current_job->setChannel($res);
+
         $this->jobsRepository->add($current_job , true);
+
         return ['message' => "Job updated" , 'data' => $this->getJobs()];
     }
 

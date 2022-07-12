@@ -19,8 +19,7 @@ class BotController extends AbstractController
 
     #[OA\Tag(name: 'bot')]
     #[Route('/api/bot', methods:['GET'], name: 'app_bot')]
-    public function index(): Response
-    {
+    public function index() : Response{
         return $this->json($this->botService->getBots());
     }
 

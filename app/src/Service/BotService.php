@@ -28,20 +28,17 @@ class BotService
         return $this->cache->delete('bot_tokens');
     }
 
-    public function actionWithManualUpdate(string $token , string $status){
+    public function actionWithManualUpdate(string $token , string $status) : array{
         $result = ['message' => 'Bot not found'];
         if($this->checkTokenAvailable($token)){
             if( $status === 'start') {
-                $result = ['message' => 'status not found'];
                 $response = $this->client->request('GET' ,"https://api.telegram.org/bot$token/getUpdates");
-                $response = $response->getContent();
-                dd($response);
+                $result = $response->getContent();
             }else{
                 $result = ['message' => 'status not found'];
             }
         }
         return $result;
-
     }
 
     public function getUpdate(string $token , Request $request ) : array{
@@ -53,6 +50,12 @@ class BotService
         return $result;
     }
 
+
+    /**
+     * {@inheritdoc}
+     * @return array
+     */
+
     public function getBotTokens(): array{
         return $this->cache->get("bot_tokens",
             function (ItemInterface $item) {
@@ -60,8 +63,8 @@ class BotService
             });
     }
 
-    public function getBots(){
-        return  $this->botRepository->findAll();
+    public function getBots() :array{
+        return $this->botRepository->findAll();
     }
 
     public function create(BotCreateRequest $request) : array{

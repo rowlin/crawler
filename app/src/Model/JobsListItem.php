@@ -21,23 +21,20 @@ class JobsListItem
 
     private $cron;
 
-    private $notity;
-
-    private $channel;
+    private $channels;
 
     private $active;
 
     private $responses;
 
-    public function __construct($id, $name, $url, $code, $cron ,$notify , $channel , $active , $responses)
+    public function __construct($id, $name, $url, $code, $cron , $channels , $active , $responses )
     {
         $this->id = $id;
         $this->name = $name;
         $this->url = $url;
         $this->code = $code;
         $this->cron = $cron;
-        $this->notify = $notify;
-        $this->channel = $channel;
+        $this->channels =  $this->setChannels($channels);
         $this->active = $active;
         $this->responses = $this->setResponses($responses);
     }
@@ -78,14 +75,9 @@ class JobsListItem
     }
 
 
-    public function getNotity() : bool
-    {
-        return $this->notity;
-    }
-
     public function getChannel()
     {
-        return $this->channel;
+        return $this->channels;
     }
 
     private function setResponses($resp): array{
@@ -97,6 +89,16 @@ class JobsListItem
             $responses[$key]['date'] = $item->getDate();
         }
         return  $responses;
+    }
+
+    private function setChannels($data){
+        if($data == null){
+            $resp = ['bots' => [ 'id' => ''] , 'channels' => [ 'id' => '']];
+        }
+        else {
+            $resp = $data;
+        }
+        return $resp;
     }
 
 }

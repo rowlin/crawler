@@ -67,11 +67,12 @@ export default {
           .then(function (response) {
             current.closeModal();
             current._toast(response.data.message, 'is-success')
+
           })
           .catch(function (error){
             if(error.response) {
               current.setError(error.response.data.details.violations);
-              current._toast(error.response.data.message, 'is-danger')
+              current._toast(error.response.data.message, 'is-danger');
             }
           });
     },

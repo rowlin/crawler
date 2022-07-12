@@ -52,18 +52,15 @@
 
               </div>
               <div class="column">
-                  <img src="/images/cron.png">
+                  <img src="/images/cron.png" alt="Crontab example">
               </div>
             </div>
 
-            <div>
-              <label for="has_notify">Notify</label>
-              <input type="checkbox" id="has_notify" v-model="job.notify">
-              <div class="columns" v-if="job.notify">
+            <div class="columns" >
                  <div class="column">
                   <label for="bot_notify">Bot for  notify</label>
-                  <select  id="bot_notify" class="input">
-                    <option value="">Select bot</option>
+                  <select  id="bot_notify" class="input" v-model="job.channel.bots.id">
+                    <option value="" >Select bot</option>
                     <option v-for="(bot , index)  in $root.bots" :key="index" :value="bot.id">
                       {{ bot.name }}
                     </option>
@@ -71,7 +68,7 @@
                  </div>
                   <div class="column">
                   <label for="channel_notify">Channel for notify</label>
-                  <select  id="channel_notify" class="input">
+                  <select  id="channel_notify" v-model="job.channel.channels.id" class="input">
                     <option value="">Select channel</option>
                     <option v-for="(channel , index)  in $root.channels" :key="index" :value="channel.id">
                       {{ channel.name }}
@@ -79,12 +76,7 @@
                   </select>
                   </div>
               </div>
-            </div>
-
           </div>
-
-
-
 
         <div v-if="showMore === job.id & showResult === null "  ref="box" >
           <prism-editor id="my-editor" :width="matchWidth" v-model="job.code" :highlight="highlighter" line-numbers></prism-editor>
@@ -101,9 +93,6 @@
 </template>
 
 <script>
-import Store from '../store'
-import  _toast   from '../mixins/toast';
-import  getJobs   from '../mixins/toast';
 import { PrismEditor } from 'vue-prism-editor';
 import 'vue-prism-editor/dist/prismeditor.min.css'; // import the styles
 
@@ -129,12 +118,12 @@ export default {
     result(){
       if(this.showMore && this.showResult)
         try {
-        var res =  JSON.stringify(JSON.parse(this.$root.jobs.items.find(e => e.id === this.showMore)
+        let res =  JSON.stringify(JSON.parse(this.$root.jobs.items.find(e => e.id === this.showMore)
               .responses.find(r => r.id === this.showResult).result), null, 2)
           if(typeof res === 'undefined'){
             res = this.$root.jobs.items.find(e => e.id === this.showMore)
                 .responses.find(r => r.id === this.showResult).result;
-          }else
+          }
             return  res;
         }catch(e){
           if(typeof e.message !== 'undefined')
@@ -170,7 +159,7 @@ export default {
     },
 
     getDate(date){
-      var d = new Date(date);
+      let d = new Date(date);
       return  d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +
           d.getHours() + ":" + d.getMinutes();
     },
@@ -179,7 +168,7 @@ export default {
        this.showMore = id
     },
     async run(id){
-      var current = this;
+      let current = this;
       await axios.put(`/api/job/run/${id}`).then(
           res =>{
             current._toast(res.data.message ,'is-success' )
@@ -193,7 +182,7 @@ export default {
 
     },
     async deleteJob(id){
-     var current = this;
+     let current = this;
        await axios.delete('/api/job/' + id).then(
           res => {
             if(res.response) {
@@ -209,7 +198,8 @@ export default {
       )
     },
     async update(job){
-      var current = this
+      let current = this
+      delete job.responses; // that not needed
       await axios.patch(`api/job/${job.id}` , job).then(
           res => {
             if(res.data) {

@@ -40,15 +40,6 @@ class Bot
      */
     private $is_webhook;
 
-    /**
-     * @ORM\OneToMany(targetEntity=BotChannel::class, mappedBy="bots" )
-     */
-    private $channels;
-
-    public function __construct()
-    {
-        $this->channels = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -91,13 +82,6 @@ class Bot
         return $this;
     }
 
-    /**
-     * @return Collection<int, Channel>
-     */
-    public function getChannels(): Collection
-    {
-        return $this->channels;
-    }
 
     public function getIsWebhook() : bool
     {
@@ -111,23 +95,4 @@ class Bot
         return $this;
     }
 
-
-    public function addChannel(Channel $channel): self
-    {
-        if (!$this->channels->contains($channel)) {
-            $this->channels[] = $channel;
-            $channel->addBots($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChannel(Channel $channel): self
-    {
-        if ($this->channels->removeElement($channel)) {
-            $channel->removeBot($this);
-        }
-
-        return $this;
-    }
 }

@@ -2,6 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Bot;
+use App\Entity\BotChannel;
+use App\Entity\Channel;
 use App\Entity\JobResponse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,6 +24,18 @@ class JobResponseRepository extends ServiceEntityRepository
         parent::__construct($registry, JobResponse::class);
     }
 
+    public function addBotChannel($bot_id  , $channel_id ){
+        $bot = $this->getEntityManager()->getRepository(Bot::class)->find($bot_id);
+        $channel =  $this->getEntityManager()->getRepository(Channel::class)->find($channel_id);
+        $bot_channel = $this->getEntityManager()->getRepository(BotChannel::class)->findBy(['bots_id' => $bot_id , 'channels_id' => $channel_id]);
+        if($bot_channel == null) {
+            $bot_channel = new BotChannel();
+            $bot_channel->setChannels($channel);
+            $bot_channel->setBots($bot);
+            $this->getEntityManager()->getRepository(BotChannel::class)->add($bot_channel, true);
+        }
+        return $bot_channel;
+    }
 
     public function add(JobResponse $entity, bool $flush = false): void
     {

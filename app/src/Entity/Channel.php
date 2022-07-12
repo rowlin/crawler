@@ -28,15 +28,6 @@ class Channel
      */
     private $chat_id;
 
-    /**
-     * @ORM\OneToMany(targetEntity=BotChannel::class, mappedBy="channels")
-     */
-    private $bots;
-
-    public function __construct()
-    {
-        //$this->bot_id = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -67,24 +58,5 @@ class Channel
         return $this;
     }
 
-    public function getBots(): Collection
-    {
-        return $this->bots;
-    }
 
-    public function addBots(Bot $botId): self
-    {
-        if (!$this->bots->contains($botId)) {
-            $this->bots[] = $botId;
-        }
-
-        return $this;
-    }
-
-    public function removeBot(Bot $botId): self
-    {
-        $this->bots->removeElement($botId);
-
-        return $this;
-    }
 }

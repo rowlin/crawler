@@ -18,14 +18,15 @@ class BotChannel
     private $id;
 
     /**
-     * @ORM\ManyToOne( targetEntity="Bot")
+     * @ORM\ManyToOne(targetEntity="Bot")
      * @ORM\JoinColumn(nullable=false)
      */
 
     private $bots;
 
+
     /**
-     * @ORM\ManyToOne( targetEntity="Channel")
+     * @ORM\ManyToOne(targetEntity="Channel")
      * @ORM\JoinColumn(nullable=false)
      */
     private $channels;
@@ -40,9 +41,11 @@ class BotChannel
         return $this->bots;
     }
 
-    public function setBots($bots): void
+    public function setBots($bots): self
     {
         $this->bots = $bots;
+
+        return $this;
     }
 
     /**
@@ -53,12 +56,10 @@ class BotChannel
         return $this->channels;
     }
 
-    /**
-     * @param mixed $channels
-     */
-    public function setChannels($channels): void
+    public function setChannels($channels): self
     {
         $this->channels = $channels;
+        return  $this;
     }
 
 }

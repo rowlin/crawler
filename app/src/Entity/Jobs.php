@@ -45,20 +45,11 @@ class Jobs
      */
     private bool $active;
 
-
     /**
-     * @Assert\NotBlank
-     * @ORM\Column(type="boolean")
+     * @ORM\OneToOne(targetEntity="BotChannel")
+     * @ORM\JoinColumn(name="bot_channel_id", referencedColumnName="id" )
      */
-
-    private bool $notify;
-
-
-    /**
-     * @ORM\OneToOne(targetEntity="BotChannel" )
-     * @ORM\Column(nullable=true)
-     */
-    private ?int $channel_id;
+    private  $channel;
 
     /**
      * @ORM\Column(type="string", length=16 , options={"default" = "* * * * *" } )
@@ -143,25 +134,15 @@ class Jobs
         return $this;
     }
 
-    public function isNotify(): bool
+
+    public function getChannel()
     {
-        return $this->notify;
+        return $this->channel;
     }
 
-    public function setNotify( $notify): self
+    public function setChannel(?BotChannel $channel): self
     {
-        $this->notify = $notify;
-        return $this;
-    }
-
-    public function getChannel() : ?int
-    {
-        return $this->channel_id;
-    }
-
-    public function setChannel(mixed $channel_id): self
-    {
-        $this->channel_id = $channel_id;
+        $this->channel = $channel;
         return $this;
     }
 
