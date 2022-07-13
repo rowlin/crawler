@@ -31,6 +31,8 @@ class BotChannel
      */
     private $channels;
 
+
+
     public function getId(): ?int
     {
         return $this->id;
