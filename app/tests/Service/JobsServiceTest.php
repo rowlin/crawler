@@ -8,7 +8,8 @@ use App\Model\JobsListResponse;
 use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Service\JobsService;
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use PHPUnit\Framework\TestCase;
 
 class JobsServiceTest extends TestCase
@@ -27,17 +28,17 @@ class JobsServiceTest extends TestCase
                 ->setUrl('https://test.dev')
                 ->setActive(true)
                 ->setCode('<pre>test</pre>')
-                ->setChannel(1)
+                ->setChannel(null)
                 ->setCron('* * * * *')
-                ->setNotify(true)
             ]);
 
 
         $respRepository = $this->createMock(JobResponseRepository::class);
+        $respEventDispatcher = $this->createMock(EventDispatcherInterface::class);
 
-        $jobs = new JobsService($repository , $respRepository);
+        $jobs = new JobsService($repository , $respRepository , $respEventDispatcher);
         $expected = new JobsListResponse([new JobsListItem(55, 'test', 'https://test.dev', '<pre>test</pre>',
-             "* * * * *" , true , 1 , true , [])]);
+             "* * * * *" , null , true , []  , new ArrayCollection())]);
 
         $this->assertEquals( $expected ,  $jobs->getJobs() );
 

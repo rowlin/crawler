@@ -32,6 +32,7 @@ class JobsService
                 $jobs->getChannel(),
                 $jobs->isActive(),
                 $jobs->getJob(20)->getValues(),
+                $jobs->getSenseBlackLists()
             );
    }
 
@@ -57,7 +58,6 @@ class JobsService
 
     public function runJob(int $id ) : array{
         $current_job = $this->jobsRepository->findOneBy(['id' => $id]);
-
         if(!$current_job){
             throw new NotFoundException();
         }else {
@@ -65,11 +65,11 @@ class JobsService
             $result = $runner->run($current_job);
             if($result) {
                 $this->jobResponseRepository->add($result, true);
-                $messageEvent = new MessageEvent();
-                $messageEvent->setMessage($result->getResult());
-                $messageEvent->setNotify($current_job->getChannel());
-                //$messageEvent->setNotify();
-                $this->dispatcher->dispatch($messageEvent, Events::PUSH_MESSAGE);
+                if($current_job->getChannel() !== null) {
+                    $messageEvent = new MessageEvent();
+                    $messageEvent->setMessage($result->getResult());
+                    $this->dispatcher->dispatch($messageEvent, Events::PUSH_MESSAGE);
+                }
             }
         }
 
@@ -84,8 +84,12 @@ class JobsService
         $current_job->setCode($request->getCode());
         $current_job->setCron($request->getCron());
         $res = null;
-        if( isset($request->getChannel()['bot_id']) & !empty($request->getChannel()['bot_id'])) {
-            $res = $this->jobsRepository->addBotChannel($request->getChannel()['bot_id'] , $request->getChannel()['channel_id'] );
+
+        if( $current_job->getChannel() === null &
+            isset($request->getChannel('bots')['id']) &
+            isset($request->getChannel('channels')['id'])
+        ) {
+            $res = $this->jobsRepository->addBotChannel($request->getChannel('bots')['id'] , $request->getChannel('channels')['id']);
         }
         $current_job->setChannel($res);
 
@@ -102,6 +106,5 @@ class JobsService
             throw new NotFoundException();
         return ['message' => "Job deleted" , 'data' => $this->getJobs() ];
     }
-
 
 }

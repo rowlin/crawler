@@ -27,7 +27,9 @@ class JobsListItem
 
     private $responses;
 
-    public function __construct($id, $name, $url, $code, $cron , $channels , $active , $responses )
+    private $senseblacklist;
+
+    public function __construct($id, $name, $url, $code, $cron , $channels , $active , $responses , $senseblacklist )
     {
         $this->id = $id;
         $this->name = $name;
@@ -37,6 +39,7 @@ class JobsListItem
         $this->channels =  $this->setChannels($channels);
         $this->active = $active;
         $this->responses = $this->setResponses($responses);
+        $this->senseblacklist  = $senseblacklist;
     }
 
     public function getId() : int
@@ -64,7 +67,7 @@ class JobsListItem
         return $this->code;
     }
 
-    public function getActive()
+    public function getActive() :bool
     {
         return $this->active;
     }
@@ -78,6 +81,16 @@ class JobsListItem
     public function getChannel()
     {
         return $this->channels;
+    }
+
+    public function getSenseblacklist()
+    {
+        return $this->senseblacklist;
+    }
+
+    public function setSenseblacklist($senseblacklist): void
+    {
+        $this->senseblacklist = $senseblacklist;
     }
 
     private function setResponses($resp): array{

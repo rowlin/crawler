@@ -22,13 +22,41 @@ class MessageListener
                     $result_message .=  '<pre>'. implode( PHP_EOL ,$r['text']) .'</pre>';
                 }
 
+
+                $keyboard = json_encode([
+                    "inline_keyboard" => [
+                        [
+                            [
+                                "text" => "No",
+                                "callback_data" => "no"
+                            ]
+
+                        ],
+
+                        [
+                            [
+                                    "text" => "No",
+                                    "callback_data" => "no"
+                            ],
+                            [
+                                    "text" => "Stop",
+                                    "callback_data" => "stop"
+                            ]
+                        ]
+                    ]
+                ]);
+
                 $data= [
                     'chat_id' => $channel,
                     'text' => $result_message,
-                    'parse_mode' => 'html'
+                    'parse_mode' => 'html',
+                    'reply_markup'=> $keyboard
                 ];
 
+
+
                 file_get_contents("https://api.telegram.org/bot$token/sendMessage?" . http_build_query($data ,'','&') );
+                die();
             }
 
         }

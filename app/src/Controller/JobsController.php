@@ -40,7 +40,7 @@ class JobsController extends AbstractController
 
     #[OA\Tag(name: 'job')]
     #[Route('/api/job/run/{id}' , methods: ['PUT'] , name: 'job_run')]
-    public function run($id) : Response
+    public function run(int $id) : Response
     {
         return  $this->json($this->jobsService->runJob($id));
     }
@@ -48,7 +48,7 @@ class JobsController extends AbstractController
 
     #[OA\Tag(name: 'job')]
     #[Route('/api/job/{id}' , methods: ['PATCH'] , name: 'job_update')]
-    public function update(#[RequestBody] JobCreateRequest $request , $id) : Response
+    public function update(#[RequestBody] JobCreateRequest $request , int $id) : Response
     {
         return $this->json($this->jobsService->updateJob($request , $id));
     }
@@ -56,7 +56,7 @@ class JobsController extends AbstractController
 
     #[OA\Tag(name: 'job')]
     #[Route('/api/job/{id}' , methods: ['DELETE'] , name: 'job_delete')]
-    public function delete($id) : Response
+    public function delete(int $id) : Response
     {
         return $this->json($this->jobsService->deleteJob($id));
     }

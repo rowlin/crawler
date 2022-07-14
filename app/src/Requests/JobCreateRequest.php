@@ -84,8 +84,16 @@ class JobCreateRequest
         $this->notify = $notify;
     }
 
-    public function getChannel(): array
+    /**
+     * @param string|null $data
+     * @return array ['channels' => [ id => ''], 'bots' => ['id' => ''] ] | ['id' => '']
+     */
+
+    public function getChannel(string $data = null): array
     {
+        if(isset($this->channel[$data]))
+            return $this->channel[$data];
+        else
         return $this->channel;
     }
 

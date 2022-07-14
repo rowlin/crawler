@@ -28,7 +28,7 @@ class JobsControllerTest extends WebTestCase
     }
 
 
-   public function testCreate() : void
+/*   public function testCreate() : void
    {
 
        $client = static::createClient();
@@ -39,7 +39,7 @@ class JobsControllerTest extends WebTestCase
        //$this->assertResponseIsSuccessful();
 
        //$this->assertEquals('200', $crawler->getResponse()->getStatusCode());
-    }
+    }*/
 /*
     public function testDelete(){
 

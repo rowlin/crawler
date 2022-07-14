@@ -62,10 +62,16 @@ class Jobs
      */
     private Collection $job;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SenseBlackList::class, mappedBy="jobs")
+     */
+    private $senseBlackLists;
+
     #[Pure]
     public function __construct()
     {
         $this->job = new ArrayCollection();
+        $this->senseBlackLists = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,6 +185,34 @@ class Jobs
             // set the owning side to null (unless already changed)
             if ($job->getJob() === $this) {
                 $job->setJob(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    public function getSenseBlackLists()
+    {
+       return $this->senseBlackLists;
+    }
+
+    public function addSenseBlackList(SenseBlackList $senseBlackList): self
+    {
+        if (!$this->senseBlackLists->contains($senseBlackList)) {
+            $this->senseBlackLists[] = $senseBlackList;
+            $senseBlackList->setJobs($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSenseBlackList(SenseBlackList $senseBlackList): self
+    {
+        if ($this->senseBlackLists->removeElement($senseBlackList)) {
+            // set the owning side to null (unless already changed)
+            if ($senseBlackList->getJobs() === $this) {
+                $senseBlackList->setJobs(null);
             }
         }
 

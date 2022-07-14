@@ -33,10 +33,30 @@
         </div>
 
           <div v-if="showResult !== null & showMore === job.id">
-              <pre>
-                {{ result }}
-              </pre>
-          </div>
+            <div class="columns">
+              <div class="column is-three-quarters">
+                <pre>
+                  {{ result }}
+                </pre>
+              </div>
+              <div class="column">
+                 <label>Sense : </label>
+                  <div class="field"  v-for="(sense , index) in job.senseblacklist" :key="index">
+                    <div v-if="sense.id">
+                      <input type="text" class="input is-small" style="width: 80%;" v-model="sense.name">
+                      <i class="fa fa-trash pointer red" title="Delete" @click="deleteSense(sense.id)" ></i>
+                    </div>
+                    <div v-else>
+                      <input type="text" class="input is-small" style="width: 80%;" v-model="job.senseblacklist[index].name">
+                      <i class="fa fa-check pointer green" title="Save" @click="update(job)" ></i>
+                    </div>
+                  </div><!--is-grouped-->
+                <div class="p-2" @click="addSense(job.id)" >
+                <i class="fa fa-circle blue" ></i> Add sense
+                </div>
+              </div>
+            </div><!--.columns-->
+          </div><!--v-if-->
           <div  v-if="showMore === job.id & showResult === null" >
             <label for="name">Name:</label>
             <input type="text" id="name" class="input" v-model="job.name">
@@ -75,9 +95,8 @@
                     </option>
                   </select>
                   </div>
-              </div>
-          </div>
-
+              </div><!--columns-->
+          </div><!--v-if--->
         <div v-if="showMore === job.id & showResult === null "  ref="box" >
           <prism-editor id="my-editor" :width="matchWidth" v-model="job.code" :highlight="highlighter" line-numbers></prism-editor>
           <div class="is-flex is-justify-content-end">
@@ -157,6 +176,18 @@ export default {
           this.showResult = response_id
       }
     },
+    addSense(){
+      let res = this.$root.jobs.items.find(e => e.id === this.showMore)
+      if(res.senseblacklist){
+        res.senseblacklist.push({name: ""})
+      }
+    },
+    deleteSense(id){
+
+
+
+    },
+
 
     getDate(date){
       let d = new Date(date);
