@@ -79,11 +79,12 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "6.1.*"
         }
     },
     "require-dev": {
+        "dama/doctrine-test-bundle": "^7.1",
         "fakerphp/faker": "^1.19",
         "phpunit/phpunit": "^9.5",
         "symfony/maker-bundle": "^1.43",

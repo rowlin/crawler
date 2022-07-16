@@ -43,7 +43,7 @@ class BotChannel
         return $this->bots;
     }
 
-    public function setBots($bots): self
+    public function setBots( Bot $bots): self
     {
         $this->bots = $bots;
 
@@ -58,7 +58,7 @@ class BotChannel
         return $this->channels;
     }
 
-    public function setChannels($channels): self
+    public function setChannels(Channel $channels): self
     {
         $this->channels = $channels;
         return  $this;

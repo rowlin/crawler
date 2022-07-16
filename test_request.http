@@ -50,6 +50,18 @@ await browser.close();
 })();
 
 
-###
+### GET jobs
+# @name="get_jobs"
+
+GET http://localhost:80/api/jobs
+
+
+### Create new job (failed)
+# @name="create job"
+
+POST http://localhost:80/api/job/create
+Content-Type: text/json
+
+[]
 
 
