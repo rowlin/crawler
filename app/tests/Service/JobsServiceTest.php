@@ -2,9 +2,12 @@
 
 namespace App\Tests\Service;
 
+use App\Entity\BotChannel;
+use App\Entity\Channel;
 use App\Entity\Jobs;
 use App\Model\JobsListItem;
 use App\Model\JobsListResponse;
+use App\Repository\BotChannelRepository;
 use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Service\JobsService;
@@ -30,8 +33,8 @@ class JobsServiceTest extends TestCase
                 ->setCode('<pre>test</pre>')
                 ->setChannel(null)
                 ->setCron('* * * * *')
+                ->setChannel(null)
             ]);
-
 
         $respRepository = $this->createMock(JobResponseRepository::class);
         $respEventDispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -41,6 +44,36 @@ class JobsServiceTest extends TestCase
              "* * * * *" , null , true , []  , new ArrayCollection())]);
 
         $this->assertEquals( $expected ,  $jobs->getJobs() );
-
     }
+
+/*    public function testGetJobsWithSense(){
+        $repository = $this->createMock(JobsRepository::class);
+        $mockBotChannel = $this->createMock(BotChannelRepository::class);
+
+        $repository->expects($this->once())
+            ->method('getAll')
+            ->with(true)
+            ->willReturn([(new Jobs())
+                ->setId(55)
+                ->setName('test')
+                ->setUrl('https://test.dev')
+                ->setActive(true)
+                ->setCode('<pre>test</pre>')
+                ->setChannel(null)
+                ->setCron('* * * * *')
+            ]);
+
+        $respRepository = $this->createMock(JobResponseRepository::class);
+        $respEventDispatcher = $this->createMock(EventDispatcherInterface::class);
+
+        $jobs = new JobsService($repository , $respRepository , $respEventDispatcher);
+        $expected = new JobsListResponse([new JobsListItem(55, 'test', 'https://test.dev', '<pre>test</pre>',
+            "* * * * *" , null , true , []  , new ArrayCollection())]);
+
+        $this->assertEquals( $expected ,  $jobs->getJobs() );
+
+    }*/
+
+
+
 }

@@ -146,9 +146,9 @@ class Jobs
         return $this->channel;
     }
 
-    public function setChannel(?BotChannel $channel): self
+    public function setChannel(?BotChannel $botchannel): self
     {
-        $this->channel = $channel;
+        $this->channel = $botchannel;
         return $this;
     }
 

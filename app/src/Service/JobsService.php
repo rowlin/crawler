@@ -14,7 +14,6 @@ use App\Requests\JobCreateRequest;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class JobsService
 {
     public function __construct(private JobsRepository $jobsRepository,
@@ -57,10 +56,7 @@ class JobsService
     }
 
     public function runJob(int $id ) : array{
-        $current_job = $this->jobsRepository->findOneBy(['id' => $id]);
-        if(!$current_job){
-            throw new NotFoundException();
-        }else {
+        $current_job = $this->jobsRepository->getCurrentJob($id);
             $runner = new Runner();
             $result = $runner->run($current_job);
             if($result) {
@@ -70,14 +66,13 @@ class JobsService
                     $messageEvent->setMessage($result->getResult());
                     $this->dispatcher->dispatch($messageEvent, Events::PUSH_MESSAGE);
                 }
-            }
         }
 
         return ['message' => "Job was run" , 'data' => $this->getJobs() ];
     }
 
     public function updateJob(JobCreateRequest  $request,  int $id ) : array {
-        $current_job  = $this->jobsRepository->findOneBy(['id' => $id]);
+        $current_job  = $this->jobsRepository->getCurrentJob($id);
         $current_job->setName($request->getName());
         $current_job->setUrl($request->getUrl());
         $current_job->setActive($request->getActive());
@@ -98,8 +93,9 @@ class JobsService
         return ['message' => "Job updated" , 'data' => $this->getJobs()];
     }
 
+
     public function deleteJob( int $id) : array{
-        $current_job  = $this->jobsRepository->findOneBy(['id' => $id]);
+        $current_job  = $this->jobsRepository->getCurrentJob($id);
         if($current_job)
             $this->jobsRepository->remove($current_job , true);
         else

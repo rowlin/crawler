@@ -8,7 +8,7 @@ use App\Entity\Channel;
 use App\Entity\Jobs;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use App\Traits\JobsTrait;
 /**
  * @extends ServiceEntityRepository<Jobs>
  *
@@ -16,9 +16,12 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Jobs|null findOneBy(array $criteria, array $orderBy = null)
  * @method Jobs[]    findAll()
  * @method Jobs[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Jobs      getCurrentJob(int $id)
  */
 class JobsRepository extends ServiceEntityRepository
 {
+    use JobsTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Jobs::class);
@@ -54,7 +57,7 @@ class JobsRepository extends ServiceEntityRepository
      * @param int $bot_id
      * @param int $channel_id
      * @return BotChannel
-     * !!! That is bad solution
+     * !!! That is no good solution
      */
 
     public function addBotChannel(int $bot_id  , int $channel_id ) : BotChannel{
