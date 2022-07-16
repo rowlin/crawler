@@ -17,6 +17,17 @@ class SenseController extends AbstractController
     {
     }
 
+
+
+    #[OA\Tag(name: 'sense')]
+    #[OA\PathParameter(name : 'id' , in:'path' , required: true,  description: 'Jpb id')]
+    #[Route('/api/sense/{id}', methods: ['PUT'] ,name: 'add_sense')]
+    public function add(#[RequestBody] SenseRequest $request ,  int $id ) : Response{
+        return  $this->json($this->senseService->add( $request , $id));
+    }
+
+
+
     #[OA\Tag(name: 'sense')]
     #[OA\PathParameter(name : 'id' , in:'path' , required: true,  description: 'Sense id')]
     #[Route('/api/sense/{id}', methods: ['DELETE'] ,name: 'delete_sense')]

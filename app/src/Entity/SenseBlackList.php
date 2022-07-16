@@ -32,6 +32,11 @@ class SenseBlackList
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        return  $this;
+    }
+
     public function getSense(): ?string
     {
         return $this->sense;

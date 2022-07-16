@@ -4,6 +4,7 @@
 namespace App\Service;
 
 
+use App\Entity\SenseBlackList;
 use App\Exception\NotFoundException;
 use App\Repository\SenseBlackListRepository;
 use App\Requests\SenseRequest;
@@ -14,8 +15,17 @@ class SenseService
     {
     }
 
+
+    public function add(SenseRequest $request,  int $id  ): array{
+        $current_job  =  $this->senseBlackListRepository->getCurrentJob($id);
+        $sense = new SenseBlackList();
+        $sense->setSense($request->getSense());
+        $current_job->addSenseBlackList($sense , );
+    }
+
+
     public function update(int $id , SenseRequest $data) : array{
-        $s  = $this->senseBlackListRepository->findOneBy(['id' , $id]);
+        $s  = $this->senseBlackListRepository->find($id);
         if(!$s){
                 throw new NotFoundException();
         }
@@ -27,7 +37,7 @@ class SenseService
     }
 
     public function delete(int $id) : array{
-        $s  = $this->senseBlackListRepository->findOneBy(['id' , $id]);
+        $s  = $this->senseBlackListRepository->find($id);
         if(!$s){
             throw new NotFoundException();
         }
