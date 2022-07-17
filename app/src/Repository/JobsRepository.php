@@ -6,6 +6,8 @@ use App\Entity\Bot;
 use App\Entity\BotChannel;
 use App\Entity\Channel;
 use App\Entity\Jobs;
+use App\Exception\NotFoundException;
+use App\Exception\ValidationException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Traits\JobsTrait;
@@ -62,7 +64,13 @@ class JobsRepository extends ServiceEntityRepository
 
     public function addBotChannel(int $bot_id  , int $channel_id ) : BotChannel{
         $bot = $this->getEntityManager()->getRepository(Bot::class)->find($bot_id);
+        if(!$bot){
+            throw new ValidationException('That Bot not found');
+        }
         $channel =  $this->getEntityManager()->getRepository(Channel::class)->find($channel_id);
+        if(!$channel){
+            throw new NotFoundException('That Channel not found');
+        }
             $bot_channel = new BotChannel();
             $bot_channel->setChannels($channel);
             $bot_channel->setBots($bot);

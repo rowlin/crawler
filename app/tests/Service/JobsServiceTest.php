@@ -2,12 +2,9 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\BotChannel;
-use App\Entity\Channel;
 use App\Entity\Jobs;
 use App\Model\JobsListItem;
 use App\Model\JobsListResponse;
-use App\Repository\BotChannelRepository;
 use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Service\JobsService;

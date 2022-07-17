@@ -43,22 +43,19 @@ class BotChannel
         return $this->bots;
     }
 
-    public function setBots( Bot $bots): self
+    public function setBots( ?Bot $bots): self
     {
         $this->bots = $bots;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getChannels()
     {
         return $this->channels;
     }
 
-    public function setChannels(Channel $channels): self
+    public function setChannels(?Channel $channels): self
     {
         $this->channels = $channels;
         return  $this;

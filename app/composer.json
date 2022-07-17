@@ -9,7 +9,6 @@
         "ext-iconv": "*",
         "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
-        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
         "nelmio/api-doc-bundle": "^4.9",
@@ -85,6 +84,7 @@
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^7.1",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fakerphp/faker": "^1.19",
         "phpunit/phpunit": "^9.5",
         "symfony/maker-bundle": "^1.43",

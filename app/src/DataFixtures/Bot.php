@@ -19,6 +19,7 @@ class Bot extends Fixture
         $bot->setName($this->faker->name());
         $bot->setToken($this->faker->text(100));
         $bot->setActive($this->faker->boolean());
+        $bot->setIsWebhook(false);
         return $bot;
     }
 

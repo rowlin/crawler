@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Attribute\RequestBody;
 use App\Requests\JobCreateRequest;
+use App\Requests\JobUpdateRequest;
 use App\Service\JobsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,7 +49,7 @@ class JobsController extends AbstractController
 
     #[OA\Tag(name: 'job')]
     #[Route('/api/job/{id}' , methods: ['PATCH'] , name: 'job_update')]
-    public function update(#[RequestBody] JobCreateRequest $request , int $id) : Response
+    public function update(#[RequestBody] JobUpdateRequest $request , int $id) : Response
     {
         return $this->json($this->jobsService->updateJob($request , $id));
     }

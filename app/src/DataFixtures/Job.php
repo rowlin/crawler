@@ -7,7 +7,7 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Jobs;
 use Faker\Factory;
 
-class AppFixtures extends Fixture
+class Job extends Fixture
 {
     private $faker;
 
@@ -22,7 +22,6 @@ class AppFixtures extends Fixture
             $job->setCode($this->faker->text(1000));
             $job->setActive($this->faker->boolean());
             $job->setCron('* * * * *');
-            $job->setNotify($this->faker->boolean());
         return $job;
     }
 

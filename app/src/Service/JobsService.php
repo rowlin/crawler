@@ -11,6 +11,7 @@ use App\Model\JobsListResponse;
 use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Requests\JobCreateRequest;
+use App\Requests\JobUpdateRequest;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -71,7 +72,7 @@ class JobsService
         return ['message' => "Job was run" , 'data' => $this->getJobs() ];
     }
 
-    public function updateJob(JobCreateRequest  $request,  int $id ) : array {
+    public function updateJob(JobUpdateRequest  $request,  int $id ) : array {
         $current_job  = $this->jobsRepository->getCurrentJob($id);
         $current_job->setName($request->getName());
         $current_job->setUrl($request->getUrl());
@@ -84,7 +85,7 @@ class JobsService
             isset($request->getChannel('bots')['id']) &
             isset($request->getChannel('channels')['id'])
         ) {
-            $res = $this->jobsRepository->addBotChannel($request->getChannel('bots')['id'] , $request->getChannel('channels')['id']);
+            $res = $this->jobsRepository->addBotChannel( (int) $request->getChannel('bots')['id'] , (int) $request->getChannel('channels')['id']);
         }
         $current_job->setChannel($res);
 
