@@ -30,6 +30,8 @@ class JobUpdateRequest
 
     private int $maxCount = 20;
 
+    private bool $showDublicate = false;
+
     private array $channel;
 
     public function setCron(string $cron): void
@@ -100,6 +102,16 @@ class JobUpdateRequest
     public function setMaxCount(int $maxCount): void
     {
         $this->maxCount = $maxCount;
+    }
+
+    public function isShowDublicate(): bool
+    {
+        return $this->showDublicate;
+    }
+
+    public function setShowDublicate(bool $showDublicate): void
+    {
+        $this->showDublicate = $showDublicate;
     }
 
     /**

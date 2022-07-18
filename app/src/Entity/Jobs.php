@@ -62,6 +62,11 @@ class Jobs
     private int $maxCount;
 
     /**
+     * @ORM\Column(type="boolean" , options={"default" : false})
+     */
+    private bool $showDublicate;
+
+    /**
      * @ORM\OneToMany(targetEntity=JobResponse::class, mappedBy="job")
      */
     private Collection $job;
@@ -163,6 +168,17 @@ class Jobs
     public function setChannel(?BotChannel $botchannel): self
     {
         $this->channel = $botchannel;
+        return $this;
+    }
+
+    public function isShowDublicate(): bool
+    {
+        return $this->showDublicate;
+    }
+
+    public function setShowDublicate(bool $showDublicate): self
+    {
+        $this->showDublicate = $showDublicate;
         return $this;
     }
 

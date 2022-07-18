@@ -22,6 +22,7 @@ class Job extends Fixture
             $job->setCode($this->faker->text(1000));
             $job->setActive($this->faker->boolean());
             $job->setMaxCount(20);
+            $job->setShowDublicate(false);
             $job->setCron('* * * * *');
         return $job;
     }

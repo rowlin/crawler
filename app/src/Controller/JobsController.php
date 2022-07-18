@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Attribute\RequestBody;
-use App\Repository\JobResponseRepository;
 use App\Requests\JobCreateRequest;
 use App\Requests\JobUpdateRequest;
 use App\Service\JobRunnerService;

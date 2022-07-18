@@ -31,7 +31,9 @@ class JobsListItem
 
     private $maxCount;
 
-    public function __construct($id, $name, $url, $code, $cron , $channels , $active , $maxCount ,  $responses ,  $senseblacklist )
+    private $showDublicate;
+
+    public function __construct($id, $name, $url, $code, $cron , $channels , $active ,$showDublicate , $maxCount ,  $responses ,  $senseblacklist )
     {
         $this->id = $id;
         $this->name = $name;
@@ -41,6 +43,7 @@ class JobsListItem
         $this->channels =  $this->setChannels($channels);
         $this->active = $active;
         $this->maxCount = $maxCount;
+        $this->showDublicate = $showDublicate;
         $this->responses = $this->setResponses($responses);
         $this->senseblacklist  = $this->setSenseblacklist($senseblacklist);
     }
@@ -78,6 +81,16 @@ class JobsListItem
     public function getResponses()
     {
         return $this->responses;
+    }
+
+    public function getShowDublicate()
+    {
+        return $this->showDublicate;
+    }
+
+    public function setShowDublicate($showDublicate): void
+    {
+        $this->showDublicate = $showDublicate;
     }
 
     public function getMaxCount()

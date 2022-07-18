@@ -24,6 +24,7 @@ class JobsService
                 $jobs->getCron(),
                 $jobs->getChannel(),
                 $jobs->isActive(),
+                $jobs->isShowDublicate(),
                 $jobs->getMaxCount(),
                 $jobs->getJob(20)->getValues(),
                 $jobs->getSenseBlackLists()->getValues()
@@ -49,6 +50,7 @@ class JobsService
         $job->setCron($request->getCron());
         $job->setActive($request->getActive());
         $job->setMaxCount(20);
+        $job->setShowDublicate(false);
         $this->jobsRepository->add($job , true);
         return ['message' => "Job created" , 'data' => $this->getJobs()];
     }
@@ -61,6 +63,7 @@ class JobsService
         $current_job->setActive($request->getActive());
         $current_job->setCode($request->getCode());
         $current_job->setCron($request->getCron());
+        $current_job->setShowDublicate($request->isShowDublicate());
         $current_job->setMaxCount($request->getMaxCount());
         $res = null;
 
