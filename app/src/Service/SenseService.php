@@ -20,12 +20,15 @@ class SenseService
         $current_job  =  $this->senseBlackListRepository->getCurrentJob($id);
         $sense = new SenseBlackList();
         $sense->setSense($request->getSense());
-        $current_job->addSenseBlackList($sense , );
+        $current_job->addSenseBlackList($sense);
+        $this->senseBlackListRepository->add($sense, true);
+        return  ['message' => "Sense was added"];
     }
 
 
     public function update(int $id , SenseRequest $data) : array{
-        $s  = $this->senseBlackListRepository->find($id);
+        $s  = $this->senseBlackListRepository->findOneBy([ 'id' => $id]);
+
         if(!$s){
                 throw new NotFoundException();
         }
@@ -42,7 +45,7 @@ class SenseService
             throw new NotFoundException();
         }
         else {
-            $this->senseBlackListRepository->remove($s);
+            $this->senseBlackListRepository->remove($s , true);
         }
         return  ['message' => 'Sense deleted'];
     }

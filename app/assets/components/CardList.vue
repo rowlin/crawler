@@ -41,14 +41,15 @@
               </div>
               <div class="column">
                  <label>Sense : </label>
-                  <div class="field"  v-for="(sense , index) in job.senseblacklist" :key="index">
-                    <div v-if="sense.id">
-                      <input type="text" class="input is-small" style="width: 80%;" v-model="sense.name">
-                      <i class="fa fa-trash pointer red" title="Delete" @click="deleteSense(sense.id)" ></i>
+                  <div class="field p-1"  v-for="(sense , index) in job.senseblacklist" :key="index">
+                    <div v-if="sense.id" >
+                      <input type="text" class="input is-small" style="width: 80%;" @change="toUpdate.push(index)" v-model="sense.sense">
+                      <i class="fa fa-check pointer" v-if="toUpdate.includes(index)" title="Update" @click="updateSense(sense)" ></i>
+                      <i class="fa fa-trash pointer" v-else title="Delete" @click="deleteSense(sense.id)" ></i>
                     </div>
                     <div v-else>
-                      <input type="text" class="input is-small" style="width: 80%;" v-model="job.senseblacklist[index].name">
-                      <i class="fa fa-check pointer green" title="Save" @click="update(job)" ></i>
+                      <input type="text" class="input is-small" style="width: 80%;"  v-model="job.senseblacklist[index].sense">
+                      <i class="fa fa-check pointer green" title="Save"  @click="attachSense(job.id  , job.senseblacklist[index]  )" ></i>
                     </div>
                   </div><!--is-grouped-->
                 <div class="p-2" @click="addSense(job.id)" >
@@ -123,6 +124,7 @@ export default {
   name: "CardList",
   data : () => {
     return {
+      toUpdate:[],
       showResult:null,
       showMore: null,
       width: '1040px',
@@ -182,12 +184,35 @@ export default {
         res.senseblacklist.push({name: ""})
       }
     },
-    deleteSense(id){
-
-
-
+    async updateSense(sense){
+      let current = this
+      await axios.post(`api/sense/${sense.id}` , sense).then(
+          res => {
+            if(res.data) {
+              current._toast(res.data.message, 'is-success')
+            }
+          },
+          error =>{
+            if(error.response) current._toast(error.response.data.message, 'is-danger')
+            else current._toast("Oops : Something was wrong", 'is-danger')
+          }
+      )
     },
-
+    async deleteSense(id){
+      let current = this
+      await axios.delete(`api/sense/${id}` ).then(
+          res => {
+            if(res.data) {
+              current._toast(res.data.message, 'is-success')
+              current.getJobs()
+            }
+          },
+          error =>{
+            if(error.response) current._toast(error.response.data.message, 'is-danger')
+            else current._toast("Oops : Something was wrong", 'is-danger')
+          }
+      )
+    },
 
     getDate(date){
       let d = new Date(date);
@@ -220,7 +245,6 @@ export default {
               current._toast(res.response.data.message, 'is-success')
               current.$root.jobs = res.response.data.data;
             }
-            else
                current.getJobs()
           },
           err => {
@@ -228,6 +252,22 @@ export default {
           }
       )
     },
+    async attachSense(job_id ,  sense){
+      let current = this
+      await axios.put(`api/sense/${job_id}` , sense).then(
+          res => {
+            if(res.data) {
+              current._toast(res.data.message, 'is-success')
+            }
+          },
+          error =>{
+            if(error.response) current._toast(error.response.data.message, 'is-danger')
+            else current._toast("Oops : Something was wrong", 'is-danger')
+          }
+      )
+    },
+
+
     async update(job){
       let current = this
       delete job.responses; // that not needed

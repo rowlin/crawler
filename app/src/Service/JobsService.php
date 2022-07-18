@@ -23,7 +23,7 @@ class JobsService
     }
 
     protected function map(Jobs $jobs) : JobsListItem{
-            return new JobsListItem(
+        return new JobsListItem(
                 $jobs->getId(),
                 $jobs->getName(),
                 $jobs->getUrl(),
@@ -32,7 +32,7 @@ class JobsService
                 $jobs->getChannel(),
                 $jobs->isActive(),
                 $jobs->getJob(20)->getValues(),
-                $jobs->getSenseBlackLists()
+                $jobs->getSenseBlackLists()->getValues()
             );
    }
 
@@ -41,6 +41,7 @@ class JobsService
         if(is_object($request) && $request->query->has('active'))
             $active = (bool) filter_var($request->query->get('active'), FILTER_VALIDATE_BOOLEAN);
        $jobs = $this->jobsRepository->getAll($active);
+
        $items = array_map( [ $this ,'map']  , $jobs);
        return  new JobsListResponse($items);
     }

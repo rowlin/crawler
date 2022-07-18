@@ -55,7 +55,7 @@ class JobsControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
     }
 
-    public function testUpdateWithExtra(){
+    public function testUpdateWithExtra() : void{
         //preparation
         $name  = $this->faker->domainName();
         $bot =  new Bot();
@@ -95,7 +95,7 @@ class JobsControllerTest extends WebTestCase
     }
 
 
-    public function testDelete(){
+    public function testDelete() : void{
         //preparation
         $job = new Job();
         $job->load($this->entityManager);
