@@ -22,7 +22,6 @@ class Jobs
     private  int $id;
 
     /**
-     *
      * @ORM\Column(type="string", length=255)
      */
     private string $url;
@@ -56,6 +55,11 @@ class Jobs
      */
 
     private string $cron;
+
+    /**
+     * @ORM\Column(type="integer" , options={"default" : 20})
+     */
+    private int $maxCount;
 
     /**
      * @ORM\OneToMany(targetEntity=JobResponse::class, mappedBy="job")
@@ -140,6 +144,16 @@ class Jobs
         return $this;
     }
 
+    public function getMaxCount(): int
+    {
+        return $this->maxCount;
+    }
+
+    public function setMaxCount(int $maxCount): self
+    {
+        $this->maxCount = $maxCount;
+        return $this;
+    }
 
     public function getChannel()
     {
@@ -157,15 +171,15 @@ class Jobs
      */
     public function getJob(int $max ): Collection
     {
-        if($max) {
+        /*if($max) {
             $criteria = \Doctrine\Common\Collections\Criteria::create()
                 ->orderBy(array('date' => \Doctrine\Common\Collections\Criteria::DESC))
                 ->setMaxResults(20);
             $res =  $this->job->matching($criteria);
         }else {
             $res  = $this->job;
-        }
-        return  $res;
+        }*/
+        return  $this->job;
     }
 
 

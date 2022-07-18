@@ -29,7 +29,9 @@ class JobsListItem
 
     private  $senseblacklist;
 
-    public function __construct($id, $name, $url, $code, $cron , $channels , $active , $responses ,  $senseblacklist )
+    private $maxCount;
+
+    public function __construct($id, $name, $url, $code, $cron , $channels , $active , $maxCount ,  $responses ,  $senseblacklist )
     {
         $this->id = $id;
         $this->name = $name;
@@ -38,6 +40,7 @@ class JobsListItem
         $this->cron = $cron;
         $this->channels =  $this->setChannels($channels);
         $this->active = $active;
+        $this->maxCount = $maxCount;
         $this->responses = $this->setResponses($responses);
         $this->senseblacklist  = $this->setSenseblacklist($senseblacklist);
     }
@@ -77,6 +80,10 @@ class JobsListItem
         return $this->responses;
     }
 
+    public function getMaxCount()
+    {
+        return $this->maxCount;
+    }
 
     public function getChannel()
     {

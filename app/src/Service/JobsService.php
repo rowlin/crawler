@@ -31,8 +31,10 @@ class JobsService
                 $jobs->getCron(),
                 $jobs->getChannel(),
                 $jobs->isActive(),
+                $jobs->getMaxCount(),
                 $jobs->getJob(20)->getValues(),
                 $jobs->getSenseBlackLists()->getValues()
+
             );
    }
 
@@ -53,6 +55,7 @@ class JobsService
         $job->setCode($request->getCode());
         $job->setCron($request->getCron());
         $job->setActive($request->getActive());
+        $job->setMaxCount(20);
         $this->jobsRepository->add($job , true);
         return ['message' => "Job created" , 'data' => $this->getJobs()];
     }
@@ -63,6 +66,7 @@ class JobsService
             $result = $runner->run($current_job);
             if($result) {
                 $this->jobResponseRepository->add($result, true);
+                $this->jobResponseRepository->removeIfMore();
                 if($current_job->getChannel() !== null) {
                     $messageEvent = new MessageEvent();
                     $messageEvent->setMessage($result->getResult());
@@ -80,6 +84,7 @@ class JobsService
         $current_job->setActive($request->getActive());
         $current_job->setCode($request->getCode());
         $current_job->setCron($request->getCron());
+        $current_job->setMaxCount($request->getMaxCount());
         $res = null;
 
         if( $current_job->getChannel() === null &

@@ -29,6 +29,7 @@ class JobsServiceTest extends TestCase
                 ->setActive(true)
                 ->setCode('<pre>test</pre>')
                 ->setChannel(null)
+                ->setMaxCount(20)
                 ->setCron('* * * * *')
                 ->setChannel(null)
             ]);
@@ -38,7 +39,7 @@ class JobsServiceTest extends TestCase
 
         $jobs = new JobsService($repository , $respRepository , $respEventDispatcher);
         $expected = new JobsListResponse([new JobsListItem(55, 'test', 'https://test.dev', '<pre>test</pre>',
-             "* * * * *" , null , true , []  , new ArrayCollection())]);
+             "* * * * *" , null , true , 20 ,  []  , new ArrayCollection())]);
 
         $this->assertEquals( $expected ,  $jobs->getJobs() );
     }

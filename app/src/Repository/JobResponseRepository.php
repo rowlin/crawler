@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\JobResponse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +20,13 @@ class JobResponseRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, JobResponse::class);
+    }
+
+    public function removeIfMore(int $maxCount = 20){
+        $rms = new ResultSetMapping($this->getEntityManager());
+        $sql = "DELETE FROM job_response WHERE id NOT IN (SELECT  * FROM (SELECT  id FROM job_response  ORDER BY date DESC LIMIT 20)temp );";
+        $query =  $this->getEntityManager()->createNativeQuery($sql , $rms);
+        return $query->getResult();
     }
 
 

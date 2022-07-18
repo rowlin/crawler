@@ -28,10 +28,8 @@ class SenseService
 
     public function update(int $id , SenseRequest $data) : array{
         $s  = $this->senseBlackListRepository->findOneBy([ 'id' => $id]);
+        if(!$s) throw new NotFoundException();
 
-        if(!$s){
-                throw new NotFoundException();
-        }
         else {
             $s->setSense($data->getSense());
             $this->senseBlackListRepository->add($s , true);
@@ -41,9 +39,7 @@ class SenseService
 
     public function delete(int $id) : array{
         $s  = $this->senseBlackListRepository->find($id);
-        if(!$s){
-            throw new NotFoundException();
-        }
+        if(!$s) throw new NotFoundException();
         else {
             $this->senseBlackListRepository->remove($s , true);
         }

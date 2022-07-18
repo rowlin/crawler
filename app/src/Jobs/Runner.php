@@ -24,6 +24,9 @@ class Runner
             ],
             'body' => $current_job->getCode()]);
 
+        //TODO: удалить если запросов больше N
+
+
         $job_response =  new JobResponse();
         $job_response->setCode(  $response->getStatusCode())
             ->setJob(  $current_job)

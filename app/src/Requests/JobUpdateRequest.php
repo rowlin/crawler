@@ -4,6 +4,7 @@
 namespace App\Requests;
 
 
+use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Url;
 
@@ -27,6 +28,7 @@ class JobUpdateRequest
     #[NotBlank]
     private string $cron = "* * * * *";
 
+    private int $maxCount = 20;
 
     private array $channel;
 
@@ -88,6 +90,16 @@ class JobUpdateRequest
     public function setNotify(bool $notify): void
     {
         $this->notify = $notify;
+    }
+
+    public function getMaxCount(): int
+    {
+        return $this->maxCount;
+    }
+
+    public function setMaxCount(int $maxCount): void
+    {
+        $this->maxCount = $maxCount;
     }
 
     /**

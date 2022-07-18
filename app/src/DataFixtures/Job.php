@@ -21,6 +21,7 @@ class Job extends Fixture
             $job->setUrl($this->faker->url());
             $job->setCode($this->faker->text(1000));
             $job->setActive($this->faker->boolean());
+            $job->setMaxCount(20);
             $job->setCron('* * * * *');
         return $job;
     }
