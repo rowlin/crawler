@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Attribute\RequestBody;
+use App\Repository\JobResponseRepository;
 use App\Requests\JobCreateRequest;
 use App\Requests\JobUpdateRequest;
+use App\Service\JobRunnerService;
 use App\Service\JobsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +17,12 @@ use Symfony\Component\HttpFoundation\Response;
 class JobsController extends AbstractController
 {
 
-    public function __construct(private JobsService $jobsService)
+    public function __construct(private JobsService $jobsService , private JobRunnerService $jobRunnerService)
     {
     }
 
     #[OA\Tag(name: 'job')]
-    #[OA\PathParameter(name:'active', in: 'query' , description: 'Available return active/unbactive jobs')]
+    #[OA\PathParameter(name:'active', in: 'query' , description: 'Available return active/unactive jobs')]
     #[OA\Response(response: 200 , description: 'Return jobs')]
     #[Route('/api/jobs', methods: ['GET'] , name: 'jobs')]
     public function index(Request $request) : Response
@@ -43,7 +45,8 @@ class JobsController extends AbstractController
     #[Route('/api/job/run/{id}' , methods: ['PUT'] , name: 'job_run')]
     public function run(int $id) : Response
     {
-        return  $this->json($this->jobsService->runJob($id));
+          $msg =  $this->jobRunnerService->runJob($id);
+          return $this->json(array_merge($msg , ['data' => $this->jobsService->getJobs()]));
     }
 
 

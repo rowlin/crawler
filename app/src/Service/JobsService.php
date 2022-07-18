@@ -2,24 +2,17 @@
 namespace  App\Service;
 
 use App\Entity\Jobs;
-use App\Events\Events;
-use App\Events\MessageEvent;
 use App\Exception\NotFoundException;
-use App\Jobs\Runner;
 use App\Model\JobsListItem;
 use App\Model\JobsListResponse;
-use App\Repository\JobResponseRepository;
 use App\Repository\JobsRepository;
 use App\Requests\JobCreateRequest;
 use App\Requests\JobUpdateRequest;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class JobsService
 {
-    public function __construct(private JobsRepository $jobsRepository,
-                                private JobResponseRepository $jobResponseRepository,
-                                private EventDispatcherInterface $dispatcher){
+    public function __construct(private JobsRepository $jobsRepository){
     }
 
     protected function map(Jobs $jobs) : JobsListItem{
@@ -60,22 +53,6 @@ class JobsService
         return ['message' => "Job created" , 'data' => $this->getJobs()];
     }
 
-    public function runJob(int $id ) : array{
-        $current_job = $this->jobsRepository->getCurrentJob($id);
-            $runner = new Runner();
-            $result = $runner->run($current_job);
-            if($result) {
-                $this->jobResponseRepository->add($result, true);
-                $this->jobResponseRepository->removeIfMore();
-                if($current_job->getChannel() !== null) {
-                    $messageEvent = new MessageEvent();
-                    $messageEvent->setMessage($result->getResult());
-                    $this->dispatcher->dispatch($messageEvent, Events::PUSH_MESSAGE);
-                }
-        }
-
-        return ['message' => "Job was run" , 'data' => $this->getJobs() ];
-    }
 
     public function updateJob(JobUpdateRequest  $request,  int $id ) : array {
         $current_job  = $this->jobsRepository->getCurrentJob($id);
