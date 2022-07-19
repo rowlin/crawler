@@ -17,14 +17,14 @@ class JobRunnerService
     {
     }
 
-
     public function runJob(int $id ) : array{
         $current_job = $this->jobResponseRepository->getCurrentJob($id);
         $runner = new Runner();
         $result = $runner->run($current_job);
         if($result) {
+
             $this->jobResponseRepository->add($result, true);
-            $this->jobResponseRepository->removeIfMore($current_job->getMaxCount() - 1);
+            $this->jobResponseRepository->removeIfMore($current_job->getMaxCount());
             if($current_job->getChannel() !== null) {
                 $messageEvent = new MessageEvent();
                 $messageEvent->setMessage($result->getResult());

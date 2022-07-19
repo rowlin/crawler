@@ -5,7 +5,9 @@ namespace App\Tests\Controller;
 use App\DataFixtures\Bot;
 use App\DataFixtures\Channel;
 use App\DataFixtures\Job;
+use App\DataFixtures\Sense;
 use App\Entity\Jobs;
+use App\Entity\SenseBlackList;
 use App\Tests\DatabasePrimer;
 use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -109,6 +111,64 @@ class JobsControllerTest extends WebTestCase
 
         $current_job_res = $this->entityManager->getRepository(Jobs::class)->findOneBy(['id' =>  $current_job_id]);
         $this->assertEquals(null , $current_job_res);
+    }
+
+    public function testRun() : void {
+        $job = new Job();
+        $job->load($this->entityManager);
+
+        $current_job = $this->entityManager->getRepository(Jobs::class)->findOneBy([]);
+        $current_job_id  = $current_job->getId();
+        $real_code = "(async () => {
+                  const browser = await puppeteer.launch(
+                {
+                args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                ignoreHTTPSErrors: true
+                }
+                );
+                const page = await browser.newPage();
+                await page.setViewport({
+                width: 1240,
+                height: 800,
+                deviceScaleFactor: 1,
+                });
+
+                await page.goto('https://cv.ee/ru/search?limit=20&offset=0&categories%5B0%5D=INFORMATION_TECHNOLOGY&towns%5B0%5D=312&keywords%5B0%5D=php&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isQuickApply=false&languages%5B0%5D=ru');
+                await page.waitForSelector('.vacancies-list');
+
+                let data = await page.$\$eval('.vacancies-list__item', (links ) => {
+                var res = [];
+                var i = 0;
+                links.forEach( (l, i )=> {
+                return res[i++] =  {
+                'url':  l.querySelector('a').href,
+                'text':  [].map.call(l.querySelectorAll('span') , function(obj){
+                return  obj.innerText;
+                })
+                }
+                }
+                )
+                return res;
+
+                });
+                return data;
+                await browser.close();
+                })();";
+
+        $current_job->setCode($real_code);
+        $this->entityManager->getRepository(Jobs::class)->add($current_job);
+        $sense_list = ['Вітаємо українців' , " — " , "применить за 30 секунд" , "/час"];
+
+        foreach ($sense_list as $item) {
+            $sense = new Sense();
+            $sense->load($this->entityManager, $current_job);
+            $current_sense = $this->entityManager->getRepository(SenseBlackList::class)->findOneBy([]);
+            $current_sense->setSense($item);
+        }
+
+        $this->entityManager->getRepository(SenseBlackList::class)->add($current_sense , true);
+        $this->client->request("PUT" , '/api/job/run/' . $current_job_id);
+        $this->assertResponseIsSuccessful();
     }
 
 
