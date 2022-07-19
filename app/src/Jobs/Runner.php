@@ -16,8 +16,6 @@ class Runner
     }
 
 
-
-
     public function filterSenseBlackList(mixed $blackList , string $result , bool $show_dublicates = false) : array{
         $result = json_decode($result, true);
         $sense_list =
@@ -32,17 +30,28 @@ class Runner
                    //delete dublicates
                    if($prev_value === $r){
                        unset($result[$index]['text'][$i]);
+                        //$result[$index]['text'][$i] = "dublicate";
                    }
                    //delete empty values
                    if(empty($r)){
                        unset($result[$index]['text'][$i]);
+                       //$result[$index]['text'][$i] = "deleted";
                    }
+
                    // delete coincidences
-                   if($show_dublicates) {
+                   if(!$show_dublicates) {
                        if (in_array(trim($r), $sense_list)) {
                            unset($result[$index]['text'][$i]);
+                           //$result[$index]['text'][$i] = " delete >..";
                        }
+
+                       if(strlen(trim($r)) < 2){
+                           unset($result[$index]['text'][$i]);
+                           //$result[$index]['text'][$i] = " > 2";
+                       }
+
                    }
+
                    //set prev
                    $prev_value = $r;
                }
