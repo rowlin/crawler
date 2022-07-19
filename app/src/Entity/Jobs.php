@@ -76,11 +76,17 @@ class Jobs
      */
     private $senseBlackLists;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SentResponse::class, mappedBy="job_id", orphanRemoval=true ,  fetch="EXTRA_LAZY")
+     */
+    private $sentResponses;
+
     #[Pure]
     public function __construct()
     {
         $this->job = new ArrayCollection();
         $this->senseBlackLists = new ArrayCollection();
+        $this->sentResponses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,6 +249,36 @@ class Jobs
             // set the owning side to null (unless already changed)
             if ($senseBlackList->getJobs() === $this) {
                 $senseBlackList->setJobs(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SentResponse>
+     */
+    public function getSentResponses(): Collection
+    {
+        return $this->sentResponses;
+    }
+
+    public function addSentResponse(SentResponse $sentResponse): self
+    {
+        if (!$this->sentResponses->contains($sentResponse)) {
+            $this->sentResponses[] = $sentResponse;
+            $sentResponse->setJobId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentResponse(SentResponse $sentResponse): self
+    {
+        if ($this->sentResponses->removeElement($sentResponse)) {
+            // set the owning side to null (unless already changed)
+            if ($sentResponse->getJobId() === $this) {
+                $sentResponse->setJobId(null);
             }
         }
 

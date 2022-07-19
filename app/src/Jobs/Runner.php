@@ -16,7 +16,7 @@ class Runner
     }
 
 
-    public function filterSenseBlackList(mixed $blackList , string $result , bool $show_dublicates = false) : array{
+    public function filterSenseBlackList(mixed $blackList , string $result) : array{
         $result = json_decode($result, true);
         $sense_list =
             array_map(function($item){
@@ -39,18 +39,16 @@ class Runner
                    }
 
                    // delete coincidences
-                   if(!$show_dublicates) {
-                       if (in_array(trim($r), $sense_list)) {
-                           unset($result[$index]['text'][$i]);
-                           //$result[$index]['text'][$i] = " delete >..";
-                       }
-
-                       if(strlen(trim($r)) < 2){
-                           unset($result[$index]['text'][$i]);
-                           //$result[$index]['text'][$i] = " > 2";
-                       }
-
+                   if (in_array(trim($r), $sense_list)) {
+                       unset($result[$index]['text'][$i]);
+                       //$result[$index]['text'][$i] = " delete >..";
                    }
+
+                   if(strlen(trim($r)) < 2){
+                       unset($result[$index]['text'][$i]);
+                       //$result[$index]['text'][$i] = " > 2";
+                   }
+
 
                    //set prev
                    $prev_value = $r;
@@ -71,7 +69,7 @@ class Runner
             ],
             'body' => $current_job->getCode()]);
 
-        $m_res = $this->filterSenseBlackList( $current_job->getSenseBlackLists()->getValues() , $response->getContent() , $current_job->isShowDublicate());
+        $m_res = $this->filterSenseBlackList( $current_job->getSenseBlackLists()->getValues() , $response->getContent() );
         $job_response =  new JobResponse();
         $job_response->setCode(  $response->getStatusCode())
             ->setJob(  $current_job)

@@ -10,11 +10,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 class MessageEvent extends Event
 {
 
-    private string $message;
+    private array $message;
 
     private BotChannel $notify;
 
-    public function getMessage(): string
+    public function getMessage(): array
     {
         return $this->message;
     }
