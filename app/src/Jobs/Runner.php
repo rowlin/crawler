@@ -18,7 +18,7 @@ class Runner
 
 
 
-    public function filterSenseBlackList($blackList ,$result , $show_dublicates = false){
+    public function filterSenseBlackList(mixed $blackList , string $result , bool $show_dublicates = false) : array{
         $result = json_decode($result, true);
         $sense_list =
             array_map(function($item){
