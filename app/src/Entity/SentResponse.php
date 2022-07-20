@@ -34,6 +34,20 @@ class SentResponse
 
     private $created_at;
 
+
+
+    /**
+     * Gets triggered only on insert
+
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
+    {
+        $this->created_at = new \DateTime("now");
+    }
+
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -67,12 +81,11 @@ class SentResponse
     {
         return $this->created_at;
     }
-    /*
+
     public function setCreatedAt($created_at): self
     {
         $this->created_at = $created_at;
         return $this;
     }
-    */
 
 }

@@ -20,7 +20,7 @@ class SenseController extends AbstractController
 
 
     #[OA\Tag(name: 'sense')]
-    #[OA\PathParameter(name : 'id' , in:'path' , required: true,  description: 'Jpb id')]
+    #[OA\PathParameter(name : 'id' , in:'path' , required: true,  description: 'Job id')]
     #[Route('/api/sense/{id}', methods: ['PUT'] ,name: 'add_sense')]
     public function add(#[RequestBody] SenseRequest $request ,  int $id ) : Response{
         return  $this->json($this->senseService->add( $request , $id));

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\SentResponse;
+use App\Traits\JobsTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,6 +17,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class SentResponseRepository extends ServiceEntityRepository
 {
+    use JobsTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, SentResponse::class);

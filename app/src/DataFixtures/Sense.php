@@ -27,7 +27,7 @@ class Sense extends Fixture
 
     public function load(ObjectManager $manager , ?Jobs $job = null): void
     {
-        $manager->flush();
+        //$manager->flush();
         $manager->persist($this->generate($job));
         $manager->flush();
     }
