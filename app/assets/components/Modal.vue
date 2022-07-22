@@ -85,7 +85,6 @@ export default {
     getErrorMessage(name) {
       if(this.error.length > 0 && this.error.find(data => data.field === name))
         return  this.error.find(data => data.field === name).message
-
     }
 
   }

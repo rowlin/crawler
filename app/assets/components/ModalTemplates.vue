@@ -18,28 +18,35 @@
           </div>
 
 
-          <div  v-if="current_template === null">
+          <div>
             <label for="name">Name</label>
             <input type="text" id="name" class="input" v-model="template.name">
           </div>
-
-          <div class="columns mt-4 mb-3 p-2"  ref="box">
-            <prism-editor id="my-editor" :width="matchWidth" v-model="template.code" :highlight="highlighter" line-numbers></prism-editor>
+          <div v-if="hasError('name')">
+            <sup class="red" >{{ getErrorMessage('name') }}</sup>
           </div>
 
-          <div class="columns">
+          <label for="my-editor">Code</label>
+          <div class="mb-5" ref="box">
+            <prism-editor id="my-editor" class="height-200 input" :width="matchWidth" v-model="template.code" :highlight="highlighter" line-numbers></prism-editor>
+            <div v-if="hasError('code')">
+              <sup class="red" >{{ getErrorMessage('code') }}</sup>
+            </div>
+          </div>
 
-            <button type="button" class="button is-half" @click="closeModal">
+
+          <div class="columns">
+            <button type="button" class="button m-2 is-half" @click="closeModal">
               Cancel
             </button>
 
 
 
-            <button type="button" v-if="current_template !== null" @click="updateTemplate" class="button is-primary">
+            <button type="button" v-if="current_template !== null" @click="updateTemplate" class="button m-2 is-primary">
               Update
             </button>
 
-            <button type="button" v-if="current_template === null" @click="createNewTemplate" class="button is-primary">
+            <button type="button" v-if="current_template === null" @click="createNewTemplate" class="button m-2 is-primary">
               Create
             </button>
 
@@ -65,11 +72,15 @@ export default {
   data: () =>{
     return{
       current_template : null,
+      error:[],
       template: {
         code : "",
         name : ""
       }
     }
+  },
+  mounted() {
+    this.error =[];
   },
   props:['active'  , 'title'],
   components:{PrismEditor},
@@ -103,11 +114,12 @@ export default {
       let  current  = this;
       await axios.post('/api/templates' , this.template).then(
           res => {
-            current._toast( res.data.message , 'is_success')
+            current._toast( res.data.message , 'is-success')
             current.getTemplates();
           },
           err => {
-            current._toast( err.data.message , 'is-error')
+            current.error = err.response.data.details.violations;
+            current._toast( err.response.data.message , 'is-danger')
           }
       )
 
@@ -116,11 +128,11 @@ export default {
       let  current  = this;
       await axios.delete('/api/template/' + this.current_template).then(
           res => {
-            current._toast( res.data.message , 'is_success')
+            current._toast( res.data.message , 'is-success')
             current.getTemplates();
           },
           err => {
-            current._toast( err.data.message , 'is-error')
+            current._toast( err.response.data.message , 'is-danger')
           }
       )
 
@@ -139,16 +151,27 @@ export default {
       let  current  = this;
       await axios.patch('/api/template/' + this.current_template  , this.template).then(
           res => {
-            current._toast( res.data.message , 'is_success')
+            current._toast( res.data.message , 'is-success')
             current.getTemplates();
           },
           err => {
-            current._toast( err.data.message , 'is-error')
+            current.error = err.response.data.details.violations;
+            current._toast( err.response.data.message, 'is-danger')
           }
       )
     },
     closeModal(){
       this.$emit('closeModal');
+    },
+
+    hasError(name){
+      if(this.error.length > 0 && this.error.find(data => data.field === name)) return true
+      else return false
+    },
+
+    getErrorMessage(name) {
+      if(this.error.length > 0 && this.error.find(data => data.field === name))
+        return  this.error.find(data => data.field === name).message
     }
 
   }
@@ -157,5 +180,6 @@ export default {
 </script>
 
 <style scoped>
+
 
 </style>

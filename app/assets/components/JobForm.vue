@@ -1,18 +1,37 @@
 <template>
   <div>
-    <label for="name">Name:</label>
-    <input type="text" id="name" class="input" v-model="job.name">
-    <label for="url">Url:</label>
-    <input type="text" id="url" class="input" v-model="job.url">
-    <div class="columns">
+    <div class="columns pt-2">
+    <div class="column">
+        <label for="name">Name:</label>
+        <input type="text" id="name" class="input" v-model="job.name">
+      </div>
       <div class="column">
-        <label for="active" class="checkbox">Active</label>
-        <input type="checkbox" id="active" v-model="job.active">
-        <br>
+        <label for="url">Url:</label>
+        <input type="text" id="url" class="input" v-model="job.url">
+      </div>
+    </div>
+      <div class="columns pt-1">
+      <div class="column">
         <label for="cron">Cron:</label>
         <input type="text" class="input" id="cron" v-model="job.cron">
 
+        <div class="columns pt-2">
+          <div class="column">
+            <label for="max_count">Max Count</label>
+            <input type="text" class="input" id="max_count"  v-model="job.maxCount">
+          </div>
+          <div class="column pt-1">
+            <div class="column">
+              <label for="active" class="checkbox">Active</label>
+              <input type="checkbox" id="active" v-model="job.active">
+              <br>
+              <label for="max_count">Show dublicate</label>
+              <input type="checkbox" id="show_dublicate" class="checkbox"  v-model="job.showDublicate" :checked="job.showDublicate">
+            </div>
+          </div>
+        </div>
       </div>
+
       <div class="column">
         <img src="/images/cron.png" alt="Crontab example">
       </div>
@@ -38,8 +57,10 @@
         </select>
       </div>
     </div><!--columns-->
+
+    <label for="my-editor">Code</label>
     <div class="container" ref="box">
-      <prism-editor id="my-editor" :width="matchWidth" v-model="job.code" :highlight="highlighter" line-numbers></prism-editor>
+      <prism-editor id="my-editor"  class="input" :width="matchWidth"  v-model="job.code" :highlight="highlighter" line-numbers></prism-editor>
     </div>
   </div>
 </template>

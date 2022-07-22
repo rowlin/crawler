@@ -34,8 +34,6 @@ class SentResponse
 
     private $created_at;
 
-
-
     /**
      * Gets triggered only on insert
 
@@ -46,7 +44,16 @@ class SentResponse
         $this->created_at = new \DateTime("now");
     }
 
+    public function __construct() {
+        $this->setCreatedAt(new \DateTime());
+    }
 
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue() {
+        $this->setCreatedAt(new \DateTime());
+    }
 
     public function getId(): ?int
     {

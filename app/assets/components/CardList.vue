@@ -7,7 +7,7 @@
             <i v-if="job.active" class='fas fa-person-running green-icon p-2'></i>
             <i v-else class="fas fa-stop red p-2"></i>
             {{ job.name}} [{{ job.url }}]
-              <i class="p-2" style="color: red" @click="showSavedResponses = true ">Show saved responses</i>
+              <i class="p-2" style="color: red" @click="showSavedResponses = !showSavedResponses;showMore = null ; showResult = null;">Show saved responses</i>
             </div>
           <div >
           <button class="button"  @click="run(job.id)"><i class="fas fa-play"></i></button>
@@ -21,7 +21,7 @@
       </div>
       <div class="card-content">
         <div class="content columns m-2">
-          <div class="collumn " v-for="(response , index) in job.responses" :key="index">
+          <div v-for="(response , index) in job.responses" :key="index">
             <div class="p-2 has-text-centered fa-border" :class="{green : (response.code === 200 & response.result.length > 3),
                           yellow : (response.code === 200 & response.result.length <= 3),
                           red : (response.code !== 200)}"
@@ -75,7 +75,9 @@ export default {
   methods:{
     changeShowResult(job_id ,  response_id) {
         if (response_id !== null){
+          if(this.showMore === null)
           this.showMore = job_id
+          else  this.showMore = null
           this.showResult = response_id
           this.showSavedResponses = false;
       }
@@ -88,7 +90,9 @@ export default {
     },
     setShowMore(id) {
       this.showResult = null;
-      this.showMore = id
+      if( this.showMore === null)
+      this.showMore = id;
+      else  this.showMore = null;
       this.showSavedResponses = false;
     },
     async run(id){

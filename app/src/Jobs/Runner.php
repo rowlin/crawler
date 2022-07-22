@@ -74,7 +74,7 @@ class Runner
         $job_response->setCode(  $response->getStatusCode())
             ->setJob(  $current_job)
             ->setResult(json_encode($m_res))
-            ->setDate(new \DateTime('@'.strtotime('now')));
+            ->setDate(new \DateTime('now'));
         return $job_response;
     }
 
