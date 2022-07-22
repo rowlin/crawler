@@ -4,7 +4,6 @@
 namespace App\Service;
 
 
-use App\Entity\SentResponse;
 use App\Exception\NotFoundException;
 use App\Model\SentResponsesItem;
 use App\Repository\SentResponseRepository;
@@ -23,6 +22,7 @@ class SentResponsesService
             throw new NotFoundException('Job not found');
         return array_map( function($data){
             return new SentResponsesItem(
+                $data->getId(),
                 $data->getName(),
                 $data->getCreatedAt()
             );}  , $current_job->getSentResponses()->getValues() );
