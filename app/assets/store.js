@@ -3,5 +3,6 @@ export default {
     active_job: true,
     jobs: {},
     boots:[],
-    channels:[]
+    channels:[],
+    templates: [],
 }
