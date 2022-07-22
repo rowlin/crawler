@@ -58,9 +58,14 @@
       </div>
     </div><!--columns-->
 
-    <label for="my-editor">Code</label>
+    <select class="select m-1" v-model="choose_template" @change="chooseTemplate()"  >
+      <option value='' >Select Template </option>
+      <option v-for="(template , index ) in $root.templates" :value="template.id" :key="index">
+        {{ template.name}}
+      </option>
+    </select>
     <div class="container" ref="box">
-      <prism-editor id="my-editor"  class="input" :width="matchWidth"  v-model="job.code" :highlight="highlighter" line-numbers></prism-editor>
+      <prism-editor id="my-editor" :width="matchWidth"  v-model="job.code" :highlight="highlighter" line-numbers></prism-editor>
     </div>
   </div>
 </template>
@@ -79,6 +84,7 @@ export default {
   components: {PrismEditor },
   data: () =>{
     return {
+      choose_template : null,
       width: '1040px',
     }
   },
@@ -100,6 +106,11 @@ export default {
       highlighter(code) {
         return highlight(code, languages.js); // languages.<insert language> to return html with markup
       },
+      chooseTemplate(){
+        if(this.choose_template != null){
+          this.job.code = this.$root.templates.find( el => ( el.id === this.choose_template))?.code;
+        }
+      }
   }
 }
 </script>

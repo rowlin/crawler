@@ -28,7 +28,7 @@
 
           <label for="my-editor">Code</label>
           <div class="mb-5" ref="box">
-            <prism-editor id="my-editor" class="height-200 input" :width="matchWidth" v-model="template.code" :highlight="highlighter" line-numbers></prism-editor>
+            <prism-editor id="my-editor"  :width="matchWidth" v-model="template.code" :highlight="highlighter" line-numbers></prism-editor>
             <div v-if="hasError('code')">
               <sup class="red" >{{ getErrorMessage('code') }}</sup>
             </div>
