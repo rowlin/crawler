@@ -12,6 +12,20 @@ class TemplateRequest
     #[NotBlank]
     private $code;
 
+
+    #[NotBlank]
+    private $name;
+
+    public function getName() : string
+    {
+        return $this->name;
+    }
+
+    public function setName($name): void
+    {
+        $this->name = $name;
+    }
+
     public function getCode() : string
     {
         return $this->code;

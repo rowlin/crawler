@@ -5,12 +5,10 @@ namespace App\Tests\Controller;
 use App\DataFixtures\TemplateFixture;
 use App\Entity\Templates;
 use App\Tests\DatabasePrimer;
-use Faker\Factory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TemplatesControllerTest extends WebTestCase
 {
-    private $faker;
     private $entityManager;
     protected $client;
 
@@ -20,7 +18,6 @@ class TemplatesControllerTest extends WebTestCase
         $kernel = self::bootKernel();
         DatabasePrimer::prime($kernel);
         $this->entityManager = $kernel->getContainer()->get('doctrine')->getManager();
-        $this->faker = Factory::create();
     }
 
 
@@ -36,7 +33,7 @@ class TemplatesControllerTest extends WebTestCase
         //prepare
         $r = $this->prepare();
         //request
-        $this->client->request('PATCH' ,'/api/template/' . $r->getId()  , [] ,[], [] , json_encode(['code' => "test" ])  );
+        $this->client->request('PATCH' ,'/api/template/' . $r->getId()  , [] ,[], [] , json_encode(['code' => "test" , 'name' => 'Test_name ',])  );
 
         $this->assertResponseIsSuccessful();
 /*
@@ -50,7 +47,7 @@ class TemplatesControllerTest extends WebTestCase
         //prepare
         $this->prepare();
         //request
-        $this->client->request('GET' ,'/api/templates'  , [] ,[], [] , json_encode(['code' => "test" ])  );
+        $this->client->request('GET' ,'/api/templates'  , [] ,[], []  );
 
         $this->assertResponseIsSuccessful();
     }
@@ -74,7 +71,7 @@ class TemplatesControllerTest extends WebTestCase
         //$r =  $this->prepare();
         //request
         $this->client->request('POST' ,'/api/templates'  ,  ['HTTP_CONTENT_TYPE' => 'application/json'],
-            [], [],json_encode([ 'code' => 'Test']) );
+            [], [],json_encode([ 'name' => 'Test_name ', 'code' => 'Test']) );
 
         $this->assertResponseIsSuccessful();
 

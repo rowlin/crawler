@@ -26,7 +26,8 @@
                           yellow : (response.code === 200 & response.result.length <= 3),
                           red : (response.code !== 200)}"
             @click="changeShowResult(job.id , response.id)">
-              <span style="color: #ffffff;">{{ response.code}}</span>
+              <div class="p-0" style="color: #ffffff;line-height: 1.2">{{ response.code}}</div>
+              <span style="color: #ffffff; font-size: 10px;line-height: 0.5">{{ JSON.parse(response.result).length}}</span>
             </div>
             <div class="rotate-45" @click="changeShowResult(job.id , response.id)">{{ getDate(response.date)}}</div>
             </div>

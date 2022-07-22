@@ -18,6 +18,7 @@ class TemplateFixture extends Fixture
     private function generate() : Templates{
         $template = new Templates();
         $template->setCode($this->faker->text());
+        $template->setName($this->faker->domainName());
         return $template;
     }
 

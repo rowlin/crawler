@@ -17,10 +17,17 @@ class Templates
      */
     private $id;
 
+
     /**
      * @ORM\Column(type="text")
      */
     private $code;
+
+
+    /**
+     * @ORM\Column(type="string" , length=60)
+     */
+    private $name;
 
     public function getId(): ?int
     {
@@ -38,4 +45,19 @@ class Templates
 
         return $this;
     }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+
+
 }

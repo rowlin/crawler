@@ -22,6 +22,7 @@ class TemplateService
     public function create(TemplateRequest $data): array{
         $template =  new Templates();
         $template->setCode($data->getCode());
+        $template->setName($data->getName());
         $this->templatesRepository->add( $template ,true);
         return [ 'message' => 'Template created'];
 
@@ -40,6 +41,7 @@ class TemplateService
         if(!$template)
             throw new NotFoundException('That template not found');
         $template->setCode($data->getCode());
+        $template->setName($data->getName());
         $this->templatesRepository->add($template , true);
         return  ['message' => 'Template updated'];
     }
