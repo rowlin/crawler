@@ -65,7 +65,7 @@ class JobsRepository extends ServiceEntityRepository
     public function addBotChannel(int $bot_id  , int $channel_id ) : BotChannel{
         $bot = $this->getEntityManager()->getRepository(Bot::class)->find($bot_id);
         if(!$bot){
-            throw new ValidationException('That Bot not found');
+            throw new NotFoundException('That Bot not found');
         }
         $channel =  $this->getEntityManager()->getRepository(Channel::class)->find($channel_id);
         if(!$channel){
