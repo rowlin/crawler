@@ -7,7 +7,7 @@
             <i v-if="job.active" class='fas fa-person-running green-icon p-2'></i>
             <i v-else class="fas fa-stop red p-2"></i>
             {{ job.name}} [{{ job.url }}]
-              <i class="p-2" style="color: red" @click="showSavedResponses = !showSavedResponses;showMore = null ; showResult = null;">Show saved responses</i>
+              <i class="p-2" style="color: red" @click="showSetResponses(job.id)">Show saved responses</i>
             </div>
           <div >
           <button class="button"  @click="run(job.id)"><i class="fas fa-play"></i></button>
@@ -22,7 +22,7 @@
       <div class="card-content">
         <div class="content columns m-2">
           <div v-for="(response , index) in job.responses" :key="index">
-            <div class="p-2 has-text-centered fa-border" :class="{green : (response.code === 200 & response.result.length > 3),
+            <div class="p-2 has-text-centered fa-border max-height-65" :class="{green : (response.code === 200 & response.result.length > 3),
                           yellow : (response.code === 200 & response.result.length <= 3),
                           red : (response.code !== 200)}"
             @click="changeShowResult(job.id , response.id)">
@@ -44,7 +44,7 @@
           <div v-if="showMore === job.id & showResult === null" >
             <job-form :job="job" ></job-form>
           </div><!--v-if--->
-          <div v-if="showSavedResponses">
+          <div v-if="showSavedResponses === job.id">
             <show-responses :job_id="job.id"></show-responses>
           </div>
       </div>
@@ -82,7 +82,12 @@ export default {
           this.showSavedResponses = false;
       }
     },
-
+    showSetResponses(id){
+      if(this.showSavedResponses === id) this.showSavedResponses = false;
+      else this.showSavedResponses = id;
+      this.showMore = null ;
+      this.showResult = null;
+    },
     getDate(date){
       let d = new Date(date);
       return  d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +
@@ -145,7 +150,11 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.max-height-65{
+  max-height: 60px;
+  max-width: 80px;
+}
 .red{
   background-color: red;
 }
@@ -164,6 +173,7 @@ export default {
   transform: rotate(45deg);
   text-align: center;
   font-size: 13px;
+  max-width: 80px;
   margin-top: 12px;
 }
 </style>
