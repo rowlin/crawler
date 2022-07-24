@@ -43,7 +43,7 @@ class JobRunnerService
         if($result) {
 
             $this->jobResponseRepository->add($result, true);
-            $this->jobResponseRepository->removeIfMore($current_job->getMaxCount());
+            $this->jobResponseRepository->removeIfMore($current_job);
 
             if($current_job->getChannel() !== null) {
                 foreach ( json_decode($result->getResult(), true) as $res) {

@@ -34,15 +34,15 @@
         </div>
           <div v-if="showResult !== null & showMore === job.id">
             <show-result :job="job" :show-more="showMore" :show-result="showResult"></show-result>
-            <!--buttons box for deleting-->
-            <div class="is-flex is-justify-content-end">
-                <button class="button is-danger m-2" @click="deleteJob(job.id)">
-                  <i class="fas fa-trash-alt p-2"></i>Delete
-                </button>
-            </div>
           </div><!--v-if-->
           <div v-if="showMore === job.id & showResult === null" >
             <job-form :job="job" ></job-form>
+            <!--buttons box for deleting-->
+            <div class="is-flex is-justify-content-end">
+              <button class="button is-danger m-2" @click="deleteJob(job.id)">
+                <i class="fas fa-trash-alt p-2"></i>Delete
+              </button>
+            </div>
           </div><!--v-if--->
           <div v-if="showSavedResponses === job.id">
             <show-responses :job_id="job.id"></show-responses>

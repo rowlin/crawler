@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\JobResponse;
+use App\Entity\Jobs;
 use App\Traits\JobsTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -25,10 +26,12 @@ class JobResponseRepository extends ServiceEntityRepository
         parent::__construct($registry, JobResponse::class);
     }
 
-    public function removeIfMore(int $maxCount = 20){
+    public function removeIfMore(Jobs $job){
         $rms = new ResultSetMapping($this->getEntityManager());
-        $sql = "DELETE FROM job_response WHERE id NOT IN (SELECT  * FROM (SELECT  id FROM job_response  ORDER BY date DESC LIMIT :maxCount)temp );";
-        $query =  $this->getEntityManager()->createNativeQuery($sql , $rms)->setParameter('maxCount' , $maxCount );
+        $sql = "DELETE FROM job_response WHERE job_id = :job_id AND id NOT IN (SELECT  * FROM (SELECT  id FROM job_response where job_id = :job_id ORDER BY date DESC LIMIT :maxCount)temp );";
+        $query =  $this->getEntityManager()->createNativeQuery($sql , $rms)
+            ->setParameter('job_id' , $job->getId())
+            ->setParameter('maxCount' , $job->getMaxCount() );
         return $query->getResult();
     }
 

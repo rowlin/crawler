@@ -68,16 +68,19 @@ class Jobs
 
     /**
      * @ORM\OneToMany(targetEntity=JobResponse::class, mappedBy="job")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private Collection $job;
 
     /**
      * @ORM\OneToMany(targetEntity=SenseBlackList::class, mappedBy="jobs")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $senseBlackLists;
 
     /**
      * @ORM\OneToMany(targetEntity=SentResponse::class, mappedBy="job_id", orphanRemoval=true ,  fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $sentResponses;
 

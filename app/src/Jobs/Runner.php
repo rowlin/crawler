@@ -24,34 +24,34 @@ class Runner
             } , $blackList);
 
         foreach ($result as $index => $res){
-            if(isset($res['text'])){
-                $prev_value  = "";
-               foreach ($res['text'] as $i => $r){
-                   //delete dublicates
-                   if($prev_value === $r){
-                       unset($result[$index]['text'][$i]);
+            if(isset($res['text'])) {
+                $prev_value = "";
+                if(is_array($res['text'])){
+                foreach ($res['text'] as $i => $r) {
+                    //delete dublicates
+                    if ($prev_value === $r) {
+                        unset($result[$index]['text'][$i]);
                         //$result[$index]['text'][$i] = "dublicate";
-                   }
-                   //delete empty values
-                   if(empty($r)){
-                       unset($result[$index]['text'][$i]);
-                       //$result[$index]['text'][$i] = "deleted";
-                   }
+                    }
+                    //delete empty values
+                    if (empty($r)) {
+                        unset($result[$index]['text'][$i]);
+                        //$result[$index]['text'][$i] = "deleted";
+                    }
 
-                   // delete coincidences
-                   if (in_array(trim($r), $sense_list)) {
-                       unset($result[$index]['text'][$i]);
-                       //$result[$index]['text'][$i] = " delete >..";
-                   }
+                    // delete coincidences
+                    if (in_array(trim($r), $sense_list)) {
+                        unset($result[$index]['text'][$i]);
+                        //$result[$index]['text'][$i] = " delete >..";
+                    }
 
-                   if(strlen(trim($r)) < 2){
-                       unset($result[$index]['text'][$i]);
-                       //$result[$index]['text'][$i] = " > 2";
-                   }
-
-
-                   //set prev
-                   $prev_value = $r;
+                    if (strlen(trim($r)) < 2) {
+                        unset($result[$index]['text'][$i]);
+                        //$result[$index]['text'][$i] = " > 2";
+                    }
+                    //set prev
+                    $prev_value = $r;
+                }
                }
             }
         }

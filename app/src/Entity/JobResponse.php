@@ -35,7 +35,6 @@ class JobResponse
 
     /**
      * @ORM\ManyToOne(targetEntity=Jobs::class, inversedBy="job")
-     * @ORM\JoinColumn(nullable=true)
      */
     private $job;
 

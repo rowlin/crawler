@@ -17,8 +17,9 @@ class MessageListener
         if(gettype($r) === 'array'){
                 $result_message = null;
                 if(isset($r['url'])){
-                    $result_message .=  '<a href="'.$r['url'].'">'. $r['text'][0] .'</a>' . PHP_EOL;
-                    $result_message .=  '<pre>'. implode( PHP_EOL ,$r['text']) .'</pre>';
+                    $result_message .=  '<a href="'.$r['url'].'">'. $r['text'][0] ?? '---' .'</a>' . PHP_EOL;
+                    if(is_array($r['text']))
+                        $result_message .=  '<pre>'.  implode( PHP_EOL , $r['text'])  .'</pre>';
                 }
 
                 $keyboard = json_encode([
