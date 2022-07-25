@@ -27,7 +27,7 @@ class JobsListItem
 
     private $responses;
 
-    private  $senseblacklist;
+    private $senseblacklist;
 
     private $maxCount;
 

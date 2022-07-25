@@ -65,14 +65,8 @@ class JobsService
         $current_job->setCron($request->getCron());
         $current_job->setShowDublicate($request->isShowDublicate());
         $current_job->setMaxCount($request->getMaxCount());
-        $res = null;
 
-        if( $current_job->getChannel() === null &
-            isset($request->getChannel('bots')['id']) &
-            isset($request->getChannel('channels')['id'])
-        ) {
-            $res = $this->jobsRepository->addBotChannel( (int) $request->getChannel('bots')['id'] , (int) $request->getChannel('channels')['id']);
-        }
+        $res = $this->jobsRepository->addBotChannel( (int) $request->getChannel('bots')['id'] , (int) $request->getChannel('channels')['id']);
         $current_job->setChannel($res);
 
         $this->jobsRepository->add($current_job , true);

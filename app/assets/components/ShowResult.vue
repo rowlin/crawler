@@ -20,7 +20,7 @@
         </div>
       </div><!--is-grouped-->
       <div class="p-2" @click="addSense(job.id)" >
-        <i class="fa fa-circle blue" ></i> Add sense
+        <i class="fa fa-circle blue" ></i> Add fsense
       </div>
     </div>
   </div><!--.columns-->
@@ -97,7 +97,6 @@ export default {
           res => {
             if(res.data) {
               current._toast(res.data.message, 'is-success');
-              this.$root.
             }
           },
           error =>{
