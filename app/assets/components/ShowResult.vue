@@ -96,7 +96,8 @@ export default {
       await axios.put(`api/sense/${job_id}` , sense).then(
           res => {
             if(res.data) {
-              current._toast(res.data.message, 'is-success')
+              current._toast(res.data.message, 'is-success');
+              this.$root.
             }
           },
           error =>{
@@ -109,6 +110,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped >
+
+
 
 </style>

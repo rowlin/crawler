@@ -9,6 +9,17 @@ use App\Events\MessageEvent;
 class MessageListener
 {
 
+    private function getHeader(mixed $data): string{
+        if(is_array($data)){
+            if(isset($data[0])) $result = $data[0];
+            else $result = array_pop($data);
+        }else{
+            $result = $data;
+        }
+        return $result;
+    }
+
+
     public function onPushMessage(MessageEvent $event){
         $r =  $event->getMessage() ; //here we get one message
         $channel = trim($event->getNotify()->getChannels()->getChatId());
@@ -17,7 +28,7 @@ class MessageListener
         if(gettype($r) === 'array'){
                 $result_message = null;
                 if(isset($r['url'])){
-                    $result_message .=  '<a href="'.$r['url'].'">'. $r['text'][0] ?? '---' .'</a>' . PHP_EOL;
+                    $result_message .=  '<a href="'.$r['url'].'">'. $this->getHeader($r['text']) .'</a>' . PHP_EOL;
                     if(is_array($r['text']))
                         $result_message .=  '<pre>'.  implode( PHP_EOL , $r['text'])  .'</pre>';
                 }

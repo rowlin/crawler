@@ -9,7 +9,23 @@ app.get("/", (req, res) => {
 app.post("/scrape", bodyParser.text({type: '*/*'}), async (req, res) => {
     if(req.body){
         try {
-            const data = await eval(req.body);
+                await eval(req.body);
+
+                const browser = await puppeteer.launch(
+                    {
+                        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+                        ignoreHTTPSErrors: true
+                    }
+                );
+                const page = await browser.newPage();
+                await page.setViewport({
+                    width: 1240,
+                    height: 800,
+                    deviceScaleFactor: 1,
+                });
+
+                    const data = await run(page , browser);
+                await browser.close();
             return res.status(200).send(data);
         }catch (e) {
             if(e.message){

@@ -5,7 +5,7 @@
         <li v-for="(resp , index)  in savedResponsesponses" class="is-hoverable">
           <span class="p-2">{{ index }}</span>
           <a :href="resp.name" target="_blank">{{ resp.name }}</a>
-          <span  style="float: right"> <i class="fa fa-trash" @click="deleteSavedResponses(resp.id)"></i></span>
+          <span  style="float: right"> <i class="fa fa-trash pointer" @click="deleteSavedResponses(resp.id)"></i></span>
         </li>
       </ul>
   </div>
@@ -32,7 +32,7 @@ export default {
             current.savedResponsesponses = res.data;
           },
           err => {
-            current._toast('Oops : something was wrong' , 404)
+            current._toast('Oops : something was wrong' , 'is-danger')
           }
       )
     },
@@ -40,11 +40,11 @@ export default {
       var current = this;
       await axios.delete('/api/responses/' + id).then(
           res => {
-            current._toast(res.data.message, 200)
+            current._toast(res.data.message, 'is-success')
             current.getSavedResponses();
           },
           err => {
-            current._toast('Oops : something was wrong', 404)
+            current._toast('Oops : Something was wrong', 'is-danger')
           }
       );
     }
