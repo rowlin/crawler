@@ -30,6 +30,7 @@ class BotButtons
     private $callback;
 
     /**
+     *
      * @ORM\ManyToOne(targetEntity=Bot::class, inversedBy="Bot")
      */
     private $bot;
@@ -38,6 +39,7 @@ class BotButtons
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $url;
+
 
 
     public function getId(): ?int
@@ -49,6 +51,7 @@ class BotButtons
         $this->id = $id;
         return $this;
     }
+
 
 
     public function getName(): ?string

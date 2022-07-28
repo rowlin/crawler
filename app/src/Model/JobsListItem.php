@@ -129,13 +129,24 @@ class JobsListItem
         return  $responses;
     }
 
-    private function setChannels($data){
+    private function setChannels($data) : array{
         if($data == null){
-            $resp = ['bots' => [ 'id' => ''] , 'channels' => [ 'id' => '']];
+            $resp = ['bots' => [ 'id' => null] , 'channels' => [ 'id' => null]];
         }
         else {
-            $resp = $data;
+            $resp = [
+                'id' => $data->getId(),
+                'bots' => [
+                    'id' => $data->getBots()->getId(),
+                    'name' => $data->getBots()->getName(),
+                ],
+                'channels' =>  [
+                    'id' => $data->getChannels()->getId(),
+                    'name' => $data->getChannels()->getName()
+                ]
+                ];
         }
+
         return $resp;
     }
 

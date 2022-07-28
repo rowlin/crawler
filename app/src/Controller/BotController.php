@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Attribute\RequestBody;
-use App\Model\BotListResponse;
 use App\Requests\BotCreateRequest;
 use App\Requests\BotUpdateRequest;
 use App\Service\BotService;
