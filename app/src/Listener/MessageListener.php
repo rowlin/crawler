@@ -24,7 +24,6 @@ class MessageListener
         $r =  $event->getMessage() ; //here we get one message
         $channel = trim($event->getNotify()->getChannels()->getChatId());
         $token = trim($event->getNotify()->getBots()->getToken());
-
         if(gettype($r) === 'array'){
                 $result_message = null;
                 if(isset($r['url'])){
@@ -33,28 +32,28 @@ class MessageListener
                         $result_message .=  '<pre>'.  implode( PHP_EOL , $r['text'])  .'</pre>';
                 }
 
+                $link = [];
+                $keyboard_array = [];
+                foreach ($event->getNotify()->getBots()->getBotButtons() as $button){
+                    if($button->getCallback() === 'link'){
+                        $link =  ['text' => $button->getName() , 'url' => $r['url']];
+                    }else{
+                        array_push($keyboard_array , [ 'text' => $button->getName()  , 'callback_data' =>  $button->getCallback()  ]);
+                    }
+                }
+
+
                 $keyboard = json_encode([
                     "inline_keyboard" => [
                         [
-                            [
-                                "text" => "No",
-                                "callback_data" => "no"
-                            ]
-
+                            $link
                         ],
-
                         [
-                            [
-                                    "text" => "No",
-                                    "callback_data" => "no"
-                            ],
-                            [
-                                    "text" => "Stop",
-                                    "callback_data" => "stop"
-                            ]
+                            ...$keyboard_array
                         ]
                     ]
                 ]);
+
 
                 $data= [
                     'chat_id' => $channel,
