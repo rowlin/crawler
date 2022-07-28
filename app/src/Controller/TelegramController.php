@@ -27,7 +27,7 @@ class TelegramController extends AbstractController
 
     #[OA\Tag(name: 'webhook')]
     #[OA\PathParameter(name:'token', in: 'path' , description: 'Telegram token')]
-    #[OA\PathParameter(name:'status', in: 'path' , description: 'status (?)')]
+    #[OA\PathParameter(name:'status', in: 'path' , description: 'status [update]')]
     #[Route('/bot{token}/{status}', methods:['GET'], name: 'app_telegram_manual_update')]
     public function manualUpdate( string $token , string $status) : Response
     {

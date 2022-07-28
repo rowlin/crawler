@@ -5,9 +5,14 @@ namespace App\Service;
 
 
 use App\Entity\Bot;
+use App\Entity\BotButtons;
 use App\Exception\NotFoundException;
+use App\Model\BotListItem;
+use App\Model\BotListResponse;
 use App\Repository\BotRepository;
 use App\Requests\BotCreateRequest;
+use App\Requests\BotUpdateRequest;
+use phpDocumentor\Reflection\DocBlock\Tags\Return_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -28,18 +33,33 @@ class BotService
         return $this->cache->delete('bot_tokens');
     }
 
-    public function actionWithManualUpdate(string $token , string $status) : array{
+    public function actionWithManualUpdate(string $token , string $status) //: array
+    {
         $result = ['message' => 'Bot not found'];
         if($this->checkTokenAvailable($token)){
-            if( $status === 'start') {
+            if( $status === 'update') {
                 $response = $this->client->request('GET' ,"https://api.telegram.org/bot$token/getUpdates");
-                $result = $response->getContent();
+                $result = json_decode($response->getContent() , true);
             }else{
-                $result = ['message' => 'status not found'];
+                $result = ['message' => 'Status not found'];
             }
         }
-        return $result;
+        return $this->catchCallback($result);
     }
+
+    protected function catchCallback(array $result){
+
+       if(isset($result['ok']) & $result['ok'] & isset($result['result']) ){
+           foreach ( $result['result'] as $r) {
+
+               if (isset($r['callback_query']['data'])) {
+                   dd($r['callback_query']['data']);
+               }
+           }
+      }
+    }
+
+
 
     public function getUpdate(string $token , Request $request ) : array{
         $result = ['message' => 'Bot not found'];
@@ -52,8 +72,9 @@ class BotService
 
 
     /**
-     * {@inheritdoc}
+     * {@inherit}
      * @return array
+     *
      */
 
     public function getBotTokens(): array{
@@ -63,8 +84,19 @@ class BotService
             });
     }
 
-    public function getBots() :array{
-        return $this->botRepository->findAll();
+
+    public function getBots() : BotListResponse{
+        return new BotListResponse(
+            array_map( function (Bot $bot) : BotListItem{
+            return new BotListItem(
+                $bot->getId(),
+                $bot->getName(),
+                $bot->getToken(),
+                $bot->isActive(),
+                $bot->getIsWebhook(),
+                $bot->getBotButtons(),
+            );
+        } ,$this->botRepository->findAll()));
     }
 
     public function create(BotCreateRequest $request) : array{
@@ -89,7 +121,7 @@ class BotService
         return ['message' => "Bot was deleted" , 'data' => $this->getBots()];
     }
 
-    public function update(BotCreateRequest $request , $id): array{
+    public function update(BotUpdateRequest $request , $id): array{
         $current_bot =  $this->botRepository->findOneBy(['id' => $id]);
         if(!$current_bot)
             throw new NotFoundException("Bot not found");
@@ -98,6 +130,20 @@ class BotService
             $current_bot->setToken($request->getToken());
             $current_bot->setActive($request->getActive());
             $current_bot->setIsWebhook($request->getIsWebhook());
+            $botButtons  = $request->getBotButtons();
+            if(!empty($botButtons)){
+                foreach ($botButtons as $button){
+                    if(!isset($button['id'])){
+                        $new_button  = new BotButtons();
+                        $new_button->setName($button['name']);
+                        $new_button->setCallback($button['callback']);
+                        $current_bot->addBotButton($new_button);
+
+                    }
+
+                }
+            }
+
             $this->botRepository->add($current_bot, true);
             $this->deleteTokensfromCache();
         }

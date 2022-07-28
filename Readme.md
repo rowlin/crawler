@@ -1,2 +1,8 @@
-Crawler with using symphony 5.0 + puppeteer (test)
+## TODO :
+
+ - [X] удалить url с jobs
+ - [ ] telegram getUpdate() when callback 
+ - [ ] создать сущность для кнопок бота
+
+
 

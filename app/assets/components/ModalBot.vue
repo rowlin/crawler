@@ -52,6 +52,19 @@
                 <span class="red" >UnActive</span>
               </span>
           </div>
+          <div v-if="bot.id">
+            <div  v-for="(button , index) in bot.botButtons" :key="index" class="columns">
+              <div class="column">
+                <label for="name_" >Name :<sup style="color: red">*</sup></label>
+                <input type="text" class="input" id="name_" v-model="button.name">
+              </div>
+              <div class="column">
+                <label for="callback">Callback <sup style="color: red">*</sup></label>
+                <input type="text" class="input" id="callback" v-model="button.callback">
+              </div>
+            </div>
+            <button class="button m-2" @click="addButton()">Add button</button>
+          </div>
         </div>
         <div v-else>
           <label for="channel_name">Name</label>
@@ -64,8 +77,9 @@
           <div v-if="hasError('chat_id')">
             <sup class="red" >{{ getErrorMessage('chat_id') }}</sup>
           </div>
-
         </div>
+
+
 
       </section>
       <footer class="modal-card-foot">
@@ -75,7 +89,7 @@
            <button   class="button is-danger" @click="deleteBot">Delete</button>
          </span>
           <span v-else>
-            <button class="button is-success" @click="saveBot">Save</button>
+            <button class="button is-success m-2" @click="saveBot">Save</button>
           </span>
         </div>
         <div v-else>
@@ -98,7 +112,6 @@
 </template>
 
 <script>
-import Store from '../store'
 export default {
   name: "ModalBot",
   props: ['title', 'active', 'size' , 'theme', 'border-top'],
@@ -111,8 +124,10 @@ export default {
         name: "",
         token: "",
         active: true,
-        is_webhook: false
+        is_webhook: false,
+        botButtons: []
       },
+
       channel:{
         name: "",
         chat_id: ""
@@ -145,6 +160,19 @@ export default {
     closeModal() {
       this.$emit('closeModal', false)
     },
+    addButton(){
+      this.bot.botButtons.push({
+        'name': "",
+        'callback' : ""
+      });
+    } ,
+
+
+
+    deleteButton(){
+
+
+    },
 
     setError(data){
       if(typeof data !== 'undefined')
@@ -153,7 +181,7 @@ export default {
 
     updateBot(){
       var current = this;
-      axios.patch("/api/bot/update/" + this.bot.id, this.bot )
+      axios.patch("/api/bot/" + this.bot.id, this.bot )
           .then(function (response) {
             current._toast(response.data.message, 'is-success')
             current.getBots();

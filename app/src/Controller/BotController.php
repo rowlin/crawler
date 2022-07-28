@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Attribute\RequestBody;
+use App\Model\BotListResponse;
 use App\Requests\BotCreateRequest;
+use App\Requests\BotUpdateRequest;
 use App\Service\BotService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +22,7 @@ class BotController extends AbstractController
     #[OA\Tag(name: 'bot')]
     #[Route('/api/bot', methods:['GET'], name: 'app_bot')]
     public function index() : Response{
-        return $this->json($this->botService->getBots());
+        return $this->json($this->botService->getBots()->getItems());
     }
 
     #[OA\Tag(name: 'bot')]
@@ -31,7 +33,7 @@ class BotController extends AbstractController
 
     #[OA\Tag(name: 'bot')]
     #[Route('/api/bot/{id}' , methods: ['PATCH'] , name : 'bot_update')]
-    public function update(#[RequestBody] BotCreateRequest $request , int $id) : Response {
+    public function update(#[RequestBody] BotUpdateRequest $request , int $id) : Response {
         return  $this->json($this->botService->update($request , $id));
     }
 

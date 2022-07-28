@@ -4,8 +4,9 @@ namespace App\Entity;
 
 use App\Repository\BotRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=BotRepository::class)
@@ -17,33 +18,48 @@ class Bot
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $token;
+    private string $token;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $active;
+    private bool $active;
 
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $is_webhook;
+    private bool $is_webhook;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BotButtons::class, mappedBy="bot" )
+     */
+    private  $botButtons;
+
+    #[Pure]
+    public function __construct()
+    {
+        $this->botButtons = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id) : self{
+        $this->id = $id;
+        return $this;
     }
 
     public function getName(): ?string
@@ -91,6 +107,34 @@ class Bot
     public function setIsWebhook($is_webhook): self
     {
         $this->is_webhook = $is_webhook;
+
+        return $this;
+    }
+
+
+    public function getBotButtons()
+    {
+        return $this->botButtons;
+    }
+
+    public function addBotButton(BotButtons $botButton): self
+    {
+        if (!$this->botButtons->contains($botButton)) {
+            $this->botButtons[] = $botButton;
+            $botButton->setBotId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBotButton(BotButtons $botButton): self
+    {
+        if ($this->botButtons->removeElement($botButton)) {
+            // set the owning side to null (unless already changed)
+            if ($botButton->getBotId() === $this) {
+                $botButton->setBotId(null);
+            }
+        }
 
         return $this;
     }
