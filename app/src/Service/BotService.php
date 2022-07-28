@@ -138,14 +138,12 @@ class BotService
                         $new_button->setName($button['name']);
                         $new_button->setCallback($button['callback']);
                         $current_bot->addBotButton($new_button);
-
                     }
 
                 }
             }
-
             $this->botRepository->add($current_bot, true);
-            $this->deleteTokensfromCache();
+            //$this->deleteTokensfromCache();
         }
         return ['message' => "Job updated" , 'data' => $this->getBots()];
     }

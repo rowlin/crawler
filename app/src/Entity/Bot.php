@@ -42,7 +42,7 @@ class Bot
     private bool $is_webhook;
 
     /**
-     * @ORM\OneToMany(targetEntity=BotButtons::class, mappedBy="bot" )
+     * @ORM\OneToMany(targetEntity=BotButtons::class, mappedBy="bot" , cascade={"persist" , "remove"} )
      */
     private  $botButtons;
 

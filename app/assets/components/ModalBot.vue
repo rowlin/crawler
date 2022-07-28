@@ -54,13 +54,31 @@
           </div>
           <div v-if="bot.id">
             <div  v-for="(button , index) in bot.botButtons" :key="index" class="columns">
-              <div class="column">
+              <div class="column is-5">
                 <label for="name_" >Name :<sup style="color: red">*</sup></label>
-                <input type="text" class="input" id="name_" v-model="button.name">
+                <span v-if="editButton === button.id ">
+                     <input type="text" class="input" id="name_" v-model="button.name">
+                </span>
+                <span v-else>
+                  {{ button.name }}
+                </span>
               </div>
-              <div class="column">
+              <div class="column is-5">
                 <label for="callback">Callback <sup style="color: red">*</sup></label>
-                <input type="text" class="input" id="callback" v-model="button.callback">
+                <span v-if="editButton === button.id ">
+                  <input type="text" class="input" id="callback" v-model="button.callback">
+                </span>
+                <span v-else>
+                  {{ button.callback}}
+                </span>
+              </div>
+              <div class="column is-2 is-flex is-justify-content-center is-align-self-baseline pt-3">
+                <span v-if="editButton === button.id" >
+                  <i class="fa fa-trash fa-2x mt-3 red" @click="deleteButton( button , index)"></i>
+                </span>
+                <span v-else >
+                    <i class="fa fa-edit fa-2x green" @click="editButton = button.id"></i>
+               </span>
               </div>
             </div>
             <button class="button m-2" @click="addButton()">Add button</button>
@@ -78,9 +96,6 @@
             <sup class="red" >{{ getErrorMessage('chat_id') }}</sup>
           </div>
         </div>
-
-
-
       </section>
       <footer class="modal-card-foot">
         <div v-if="switch_act === 'bot'">
@@ -94,8 +109,8 @@
         </div>
         <div v-else>
           <span v-if="channel.id">
-               <button   class="button is-success" @click="updateChannel">Update</button>
-          <button   class="button is-danger" @click="deleteChannel">Delete</button>
+                <button class="button is-success" @click="updateChannel">Update</button>
+                <button class="button is-danger" @click="deleteChannel">Delete</button>
           </span>
           <span v-else>
             <button class="button is-success" @click="saveChannel">Save</button>
@@ -127,7 +142,7 @@ export default {
         is_webhook: false,
         botButtons: []
       },
-
+      editButton: "",
       channel:{
         name: "",
         chat_id: ""
@@ -152,27 +167,44 @@ export default {
     setEmptyChannel(){
       this.channel = {
         name: "",
-        chat_id: ""
+        chat_id: "",
       }
       this.switch_act = 'channel'
     },
 
+    async getBotsAndSet(id){
+      await this.getBots();
+      this.bot = this.$root.bots.find(e => e.id === id)
+
+    },
+
     closeModal() {
+      this.setEmptyBot();
       this.$emit('closeModal', false)
     },
     addButton(){
       this.bot.botButtons.push({
         'name': "",
-        'callback' : ""
+        'callback' : "",
+        'id' : null
       });
-    } ,
-
-
-
-    deleteButton(){
-
-
+      this.editButton = null
     },
+     async deleteButton(button , index){
+      var current = this;
+      if(typeof button.id === "undefined"){
+         this.bot.botButtons.splice(0 ,index);
+      }else {
+        await axios.delete('/api/bot_button/' + button.id)
+            .then(function (response) {
+              current._toast(response.data.message, 'is-success')
+              current.bot.botButtons.splice( index);
+              current.getBotsAndSet(button.id);
+            });
+        this.editButton = null;
+      }
+       this.$nextTick();
+     },
 
     setError(data){
       if(typeof data !== 'undefined')
@@ -184,7 +216,9 @@ export default {
       axios.patch("/api/bot/" + this.bot.id, this.bot )
           .then(function (response) {
             current._toast(response.data.message, 'is-success')
-            current.getBots();
+            current.getBotsAndSet(current.bot.id);
+            current.editButton = null;
+            current.closeModal();
           })
           .catch(function (error){
             if(error.response) {
@@ -214,8 +248,7 @@ export default {
       axios.post("/api/bot/create", this.bot )
           .then(function (response) {
             current._toast(response.data.message, 'is-success');
-            current.getBots();
-            this.closeModal();
+            current.getBotsAndSet(current.bot.id);
           })
           .catch(function (error){
             if(error.response.data) {
