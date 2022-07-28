@@ -49,6 +49,7 @@ class JobRunnerService
                 foreach ( json_decode($result->getResult(), true) as $res) {
                     if($this->checkOrSaveSent($current_job, $res)) {
                         $messageEvent = new MessageEvent();
+                        $messageEvent->setJobId($current_job->getId());
                         $messageEvent->setNotify($current_job->getChannel());
                         $messageEvent->setMessage($res);
                         $this->dispatcher->dispatch($messageEvent, Events::PUSH_MESSAGE);

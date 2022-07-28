@@ -38,7 +38,7 @@ class MessageListener
                     if($button->getCallback() === 'link'){
                         $link =  ['text' => $button->getName() , 'url' => $r['url']];
                     }else{
-                        array_push($keyboard_array , [ 'text' => $button->getName()  , 'callback_data' =>  $button->getCallback()  ]);
+                        array_push($keyboard_array , [ 'text' => $button->getName()  , 'callback_data' =>  $button->getCallback() . $event->getJobId() ]);
                     }
                 }
 

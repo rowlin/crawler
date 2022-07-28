@@ -12,7 +12,20 @@ class MessageEvent extends Event
 
     private array $message;
 
+    private int $job_id ;
+
     private BotChannel $notify;
+
+
+    public function getJobId(): int
+    {
+        return $this->job_id;
+    }
+
+    public function setJobId(int $job_id): void
+    {
+        $this->job_id = $job_id;
+    }
 
     public function getMessage(): array
     {
