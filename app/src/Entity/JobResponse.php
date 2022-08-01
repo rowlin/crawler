@@ -24,7 +24,7 @@ class JobResponse
     private $code;
 
     /**
-     * @ORM\Column( type="text", length=65535)
+     * @ORM\Column( type="text", length=4294967295, nullable=true)
      */
     private $result;
 

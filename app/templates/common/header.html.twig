@@ -1,23 +1,29 @@
-<nav class="nav navbar has-shadow" role="navigation" aria-label="main navigation">
-    <div class="container">
-         <div class="navbar-brand">
-                <a class="navbar-item p-0" href="/">
-                    <img src="/images/logo.png" style="max-height: none" alt="Crawler" width="60" height="60">
+<nav class="navbar container is-widescreen" >
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="/images/logo.png" style="max-height: none"  alt="Crawler" width="60" height="60">
+        </a>
+        <div class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarExampleTransparentExample">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <div id="navbarExampleTransparentExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="/doc">
+                Api Doc
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <a class="navbar-item" href="/manual">
+                    Manual
                 </a>
-         </div>
-        <label for="menu-toggle" class="nav-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
-        <input type="checkbox" id="menu-toggle" class="is-hidden"/>
-        <div class="nav-right nav-menu">
-            <a class="nav-item is-tab is-hidden-tablet" href="/jobs">
-                <span class="icon"><i class="fa fa-home"></i></span> Jobs
-            </a>
-            <a class="nav-item is-tab is-hidden-tablet" href="/links" >
-                <span class="icon"><i class="fa fa-table" ></i></span> get Links
-            </a>
+            </div>
         </div>
     </div>
 </nav>
+

@@ -6,18 +6,32 @@
 
 
 <div class="content">
-    <h1>Документация к проекту</h1>
+    <h1>Документация к проекту и просто заметки </h1>
 
     <h2>Зачем этот проект - какую проблему решает</h2>
-    <p>Данный проект представляет из себя админнку для автоматизации действий в брайзере. </p>
+    <p>Данный проект представляет из себя админнку для автоматизации действий в браузере. </p>
 
-    <p>Сравнения доступных инструментов </p>
+    <i>Сравнения доступных инструментов </i>
+    <p>В настоящее время есть большое колличество инструментов решающих  данную проблему (как платные - так и бесплатные)</p>
+    Популярные из них :
+    <ul style="list-style: none">
+        <li><a href="https://github.com/bablosoft/BAS" target="_blank">Bas</a>  Browser automation studio (имеет платную и бесплатные версии) </li>
+        <li><a href="https://zennolab.com" target="_blank">Zennoposter</a>  (платное решение) </li>
+    </ul>
 
+    <p>Данные решения зарекомендовали себя и пользуются успехом .</p>
+
+    <p><s><em>Если вы не знакомы с этими решениями - обязательно ознакомьтесь - уверен на 99% они способны решить ваши задачи.</em></s></p>
 
     <h4>Как запустить</h4>
-
-    <h3>Условия использования и распространия</h3>
-
+    <p>Выполните в терминале :</p>
+    <code>
+        git clone https://github.com/rowlin/crawler
+        <br/>
+         cd ./crawler
+        <br/>
+         make sh
+    </code>
 
     <h3>Архитектура проекта </h3>
 
@@ -40,10 +54,180 @@
 
     <p>Локальную разработку лучше вести внутри любимого редактора а тестировать скрипт - использую команду node your_script.js (данная каманда запустит браузер ).</p>
 
+    <h2>Todo :</h2>
+    <ul style="list-style: none">
+        <li>Решить проблемы с редактором</li>
+        <li>Покрыть проверочными тестами операции с telegram ботами </li>
+        <li>Написать пример использзования </li>
+        <li>Добавить дорекр контейнер для тестирования puppetter скриптов</li>
+        <li>Добавить обработку webhook от telegram </li>
+        <li>Продумать интерефейс для коммуникации с ботом </li>
+        <li>Cделать возможность выгрузки результатов на стороннее Api</li>
+
+    </ul>
+
+    <h2>Пример использования</h2>
+
+    <h3>Парсинг сайтов</h3>
+
+    <p>Для парсинга сайта создадим новый файл test.js в директории crawler/puppetter/  </p>
+    <code>
+        $ cd crawler/puppetter/
+        <br/>
+        $ touch test.js
+    </code>
+
+    <p>Для примера :</p>
 
 
+    https://www.howtogeek.com/202825/what%E2%80%99s-the-difference-between-chromium-and-chrome/
 
 
+<pre>
+const puppeteer = require("puppeteer");
+const userAgent = require('user-agents');
 
+(async () => {
+    const browser = await puppeteer.launch(
+        { headless: false , devtools: true}
+    );
+    const page = await browser.newPage();
+    await page.setUserAgent(userAgent.toString());
+    await page.setViewport({
+        width: 1240,
+        height: 800,
+        deviceScaleFactor: 1,
+    });
+    await page.goto('https://www.weblancer.net/jobs/veb-programmirovanie-31/', { waitUntil: 'networkidle2' });
+
+    await page.waitForSelector('#tab_pane-main > div.page_content.d-flex.flex-column > div.cols_table.divided_rows');
+
+
+    const result = await page.evaluate(() => {
+
+
+        let productNodes = Array.from(document.querySelectorAll(`.row.click_container-link.set_href`));
+        const res = [];
+        productNodes.forEach( (el, i) => {
+            return res[i] =
+                  {
+                  'url' : el.querySelector('a.text-bold').href,
+                  'text' :  [ el.querySelector('a.text-bold').innerText ,
+                      el.querySelector('.text_field.text-inline').innerText,
+                      el.querySelector(`a.text-muted.data_url`).innerText,
+                  ],
+
+                 }
+        });
+
+        return res;
+    });
+
+    //  await browser.close();
+})();
+
+</pre>
+<br/>
+<p>Оборачиваем функционал в функцию async run( page, browser) <s>  которая принимает в себя page и browser</s></p>
+<p>Что бы протестировать ее работу - можно в файл test_request.http (что расположен в корне проекта ) <s>добавить</s> метод</p>
+<br/>
+<pre>
+POST http://localhost:3000/scrape
+Content-Type: text/html
+
+async function run(page , browser) {
+
+await page.goto('https://www.weblancer.net/jobs/veb-programmirovanie-31/', {waitUntil: 'networkidle2'});
+
+await page.waitForSelector('#tab_pane-main > div.page_content.d-flex.flex-column > div.cols_table.divided_rows');
+
+
+return await page.evaluate(() => {
+
+
+let productNodes = Array.from(document.querySelectorAll(`.row.click_container-link.set_href`));
+const res = [];
+productNodes.forEach((el, i) => {
+return res[i] =
+{
+'url': el.querySelector('a.text-bold').href,
+'text': [el.querySelector('a.text-bold').innerText,
+el.querySelector('.text_field.text-inline').innerText,
+el.querySelector(`a.text-muted.data_url`).innerText,
+],
+
+}
+});
+
+return res;
+});
+}
+
+</pre>
+
+<p>Выполнив запрос - должны увидеть массив из результатов , который должен включать в себя <'string'>"url" и <'array'>"text". </p>
+
+<p>Далее создаем в aдминке задание - в поле Code - вводим функцию</p>
+<p>То есть для получения результата с нескольких страниц выполним следуюший код   </p>
+
+    <pre>
+            async function goWeblancer(page ,i ,  browser) {
+        await page.goto('https://www.weblancer.net/jobs/veb-programmirovanie-31/?page=' + i, {waitUntil: 'domcontentloaded'});
+               await page.waitForSelector('#tab_pane-main > div.page_content.d-flex.flex-column > div.cols_table.divided_rows');
+                 return await page.evaluate(() => {
+                    let productNodes = Array.from(document.querySelectorAll(`.row.click_container-link.set_href`));
+                    const res = [];
+                    productNodes.forEach((el, i) => {
+                            return res[i] =
+                                {
+                                    'url': el.querySelector('a.text-bold').href,
+                                    'text': [el.querySelector('a.text-bold').innerText,
+                                        el.querySelector('.text_field.text-inline').innerText,
+                                        el.querySelector(`a.text-muted.data_url`) ? el.querySelector(`a.text-muted.data_url`).innerText : "",
+                                    ],
+                                }
+
+                    });
+                    return res;
+        });
+    }
+
+   async function run()
+    {
+        var data = [];
+        for (var i = 1; i < 10; i++) {
+            let r = await goWeblancer(page, i, browser);
+            console.log(r.length);
+            data.push(...r);
+        }
+        console.log(data.length);
+        return data;
+    }
+    </pre>
+
+    <p>Где метод run()  запускает цикл </p>
+
+    <p>Выбираеем бота и канал - куда постить </p>
+    <p>Проверяем что получилось на выходе - в случае необходимости - изменяем </p>
+    <p>В случае, если ответ содержит слова , которе не нужны - можно их удалить - добавив 'add sense' нежелаемое выражение</p>
+
+    <h2>Заметки</h2>
+
+    <p>Cookies</p>
+    https://rag0g.medium.com/using-cookies-to-speed-up-puppeteer-and-playwright-scripts-38eb413439f8
+
+    <p>Использование proxy</p>
+<pre>
+    const browser = await puppeteer.launch({
+    // Launch chromium using a proxy server on port 9876.
+    // More on proxying:
+    //    https://www.chromium.org/developers/design-documents/network-settings
+    args: [
+    '--proxy-server=127.0.0.1:9876',
+    // Use proxy for localhost URLs
+    '--proxy-bypass-list=<-loopback>',
+    ],
+    });
+</pre>
 </div>
 {% endblock %}
