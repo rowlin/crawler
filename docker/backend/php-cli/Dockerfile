@@ -5,6 +5,7 @@ ARG USER_ID=1000
 #RUN mv /common/backend/php/php.ini $PHP_INI_DIR/php.ini
 #COPY ./common/php/conf.d /usr/local/etc/php/conf.d
 
+RUN pecl install redis && docker-php-ext-enable redis
 RUN docker-php-ext-install pdo_mysql mysqli
 #RUN docker-php-ext-install intl
 RUN docker-php-ext-install exif
@@ -12,6 +13,8 @@ RUN docker-php-ext-install exif
 RUN docker-php-ext-configure exif
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
+
+
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --quiet \
     && rm -rf /root/.composer/cache
