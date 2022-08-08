@@ -5,9 +5,16 @@ namespace App\Listener;
 
 
 use App\Events\MessageEvent;
+use App\Message\TelegramNotification;
+use Symfony\Component\Messenger\MessageBusInterface;
+
 
 class MessageListener
 {
+
+    public function __construct(private MessageBusInterface $messageBus)
+    {
+    }
 
     private function getHeader(mixed $data): string{
         if(is_array($data)){
@@ -61,9 +68,11 @@ class MessageListener
                     'parse_mode' => 'html',
                     'reply_markup'=> $keyboard
                 ];
+                $this->messageBus->dispatch(new TelegramNotification($token ,$data));
+                //file_get_contents("https://api.telegram.org/bot$token/sendMessage?" . http_build_query($data ,'','&') );
 
-                file_get_contents("https://api.telegram.org/bot$token/sendMessage?" . http_build_query($data ,'','&') );
         }
+
     }
 
 

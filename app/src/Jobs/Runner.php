@@ -6,7 +6,6 @@ namespace App\Jobs;
 
 use App\Entity\JobResponse;
 use App\Entity\Jobs;
-use App\Entity\SenseBlackList;
 use Symfony\Component\HttpClient\HttpClient;
 
 class Runner
@@ -68,6 +67,8 @@ class Runner
                 'Content-Type' => 'text/html',
             ],
             'body' => $current_job->getCode()]);
+
+
 
         $m_res = $this->filterSenseBlackList( $current_job->getSenseBlackLists()->getValues() , $response->getContent() );
         $job_response =  new JobResponse();

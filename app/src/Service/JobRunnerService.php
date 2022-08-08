@@ -52,7 +52,8 @@ class JobRunnerService
                         $messageEvent->setJobId($current_job->getId());
                         $messageEvent->setNotify($current_job->getChannel());
                         $messageEvent->setMessage($res);
-                        $this->dispatcher->dispatch($messageEvent, Events::PUSH_MESSAGE);
+                        $this->dispatcher->dispatch($messageEvent , Events::PUSH_MESSAGE );
+                        //$this->dispatcher->dispatch($messageEvent, Events::PUSH_MESSAGE);
                     }
                 }
             }

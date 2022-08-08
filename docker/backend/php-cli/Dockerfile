@@ -14,8 +14,6 @@ RUN docker-php-ext-configure exif
 
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 
-
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer --quiet \
     && rm -rf /root/.composer/cache
 

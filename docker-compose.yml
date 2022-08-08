@@ -12,6 +12,8 @@ services:
     depends_on:
       - redis
       - mysql
+    networks:
+      - symfony
     environment:
       #XDEBUG_CONFIG: "remote_host=192.168.220.1 remote_enable=1 remote_autostart=off  remote_port=9003"
       PHP_IDE_CONFIG: serverName=docker
@@ -27,6 +29,8 @@ services:
     depends_on:
       - redis
       - mysql
+    networks:
+      - symfony
   app:
     build:
       dockerfile: docker/backend/nginx/Dockerfile
@@ -39,6 +43,21 @@ services:
       - puppetter
     ports:
       - "80:80"
+    networks:
+      - symfony
+  job-queue:
+    build:
+      dockerfile: docker/backend/php-consume/Dockerfile
+    volumes:
+      - ./app:/app:rwx
+    env_file:
+      - ./.env
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command: php /app/bin/console messenger:consume -vv
+    networks:
+      - symfony
   redis:
     build:
       dockerfile: docker/redis/Dockerfile
@@ -47,20 +66,24 @@ services:
       - "6379:6379"
     volumes:
       - /docker/redis:/usr/local/etc/redis
+    networks:
+      - symfony
   mysql:
-      image: mysql:5.7
-      cap_add:
-        - SYS_NICE
-      environment:
-        MYSQL_DATABASE: 'db'
-        MYSQL_USER: 'user'
-        MYSQL_PASSWORD: 'password'
-        MYSQL_ROOT_PASSWORD: 'password'
-      restart: always
-      ports:
-        - '3306:3306'
-      volumes:
-        - /docker/backend/mysql:/var/lib/mysql
+    image: mysql:5.7
+    cap_add:
+      - SYS_NICE
+    environment:
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'password'
+      MYSQL_ROOT_PASSWORD: 'password'
+    restart: always
+    ports:
+      - '3306:3306'
+    volumes:
+      - /docker/backend/mysql:/var/lib/mysql
+    networks:
+      - symfony
   puppetter:
     build:
       dockerfile: docker/backend/puppetter/Dockerfile
@@ -68,7 +91,10 @@ services:
       - ./puppetter:/puppetter
     ports:
       - "3000:3000"
+    networks:
+      - symfony
     restart: always
 
-
+networks:
+  symfony:
 
