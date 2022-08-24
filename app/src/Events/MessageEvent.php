@@ -12,7 +12,7 @@ class MessageEvent extends Event
 
     private array $message;
 
-    private int $job_id ;
+    private int $job_id;
 
     private BotChannel $notify;
 
@@ -46,11 +46,8 @@ class MessageEvent extends Event
     {
         $this->notify = $notify;
 
-        return  $this;
+        return $this;
     }
-
-
-
 
 
 }

@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Attribute\RequestBody;
+use App\Events\Events;
+use App\Events\JobEvent;
+use App\Message\RunJob;
 use App\Requests\JobCreateRequest;
 use App\Requests\JobUpdateRequest;
-use App\Service\JobRunnerService;
 use App\Service\JobsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,10 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use OpenApi\Attributes as OA;
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
+
 class JobsController extends AbstractController
 {
 
-    public function __construct(private JobsService $jobsService , private JobRunnerService $jobRunnerService)
+    public function __construct(private JobsService $jobsService ,
+                                private EventDispatcherInterface $dispatcher ,
+                                private MessageBusInterface $bus)
     {
     }
 
@@ -44,9 +52,31 @@ class JobsController extends AbstractController
     #[Route('/api/job/run/{id}' , methods: ['PUT'] , name: 'job_run')]
     public function run(int $id) : Response
     {
-          $msg =  $this->jobRunnerService->runJob($id);
-          return $this->json(array_merge($msg , ['data' => $this->jobsService->getJobs()]));
+        if($this->jobsService->getCurrentJob($id)) {
+            $jobEvent = new JobEvent();
+            $jobEvent->setJob($id);
+            $this->dispatcher->dispatch($jobEvent , Events::RUN_JOB);
+            $msg = ['message' => 'ok'];
+        }else{
+            $msg = ['message' => "Job not found"];
+        }
+        return $this->json(array_merge( $msg , [ 'data' => $this->jobsService->getJobs()]));
     }
+
+    #[OA\Tag(name: 'job')]
+    #[Route('/api/job/run2/{id}' , methods: ['PUT'] , name: 'job_run2')]
+    public function run2(int $id) : Response
+    {
+        if($this->jobsService->getCurrentJob($id)) {
+            $jobEvent = new RunJob($id);
+            $this->bus->dispatch($jobEvent);
+            $msg = ['message' => 'ok'];
+        }else{
+            $msg = ['message' => "Job not found"];
+        }
+        return $this->json(array_merge( $msg , [ 'data' => $this->jobsService->getJobs()]));
+    }
+
 
 
     #[OA\Tag(name: 'job')]

@@ -1,30 +1,31 @@
 framework:
     messenger:
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
-        # failure_transport: failed
+        failure_transport: failed
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-            redis:
+            messages:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
-                # default configuration
                 retry_strategy:
                     max_retries: 3
-                    # milliseconds delay
-                    delay: 16000
-                    # causes the delay to be higher before each retry
-                    # e.g. 1 second delay, 2 seconds, 4 seconds
+                    delay: 10
                     multiplier: 1
-                    max_delay: 0
+            jobs:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_JOBS)%'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 10
 
-            # failed: 'doctrine://default?queue_name=failed'
+            failed: '%env(MESSENGER_TRANSPORT_DSN_FAILED)%'
             # sync: 'sync://'
 
 
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
-            'App\Message\TelegramNotification': redis
+            'App\Message\TelegramNotification': messages
+            'App\Message\RunJob': jobs
 
 # when@test:
 #    framework:

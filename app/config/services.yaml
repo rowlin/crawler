@@ -45,4 +45,7 @@ services:
     App\Listener\MessageListener:
         tags:
             - { name: kernel.event_listener, event : push.message,  priority: 15 }
+    App\Listener\RunJobListener:
+        tags:
+            - { name: kernel.event_listener, event : run.job, priority: 20 }
 

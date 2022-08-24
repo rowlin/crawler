@@ -7,7 +7,7 @@ namespace App\Listener;
 use App\Events\MessageEvent;
 use App\Message\TelegramNotification;
 use Symfony\Component\Messenger\MessageBusInterface;
-
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 class MessageListener
 {
@@ -68,9 +68,8 @@ class MessageListener
                     'parse_mode' => 'html',
                     'reply_markup'=> $keyboard
                 ];
-                $this->messageBus->dispatch(new TelegramNotification($token ,$data));
+                $this->messageBus->dispatch(new TelegramNotification($token ,$data) , [ new DelayStamp(20) ]);
                 //file_get_contents("https://api.telegram.org/bot$token/sendMessage?" . http_build_query($data ,'','&') );
-
         }
 
     }

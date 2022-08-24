@@ -56,8 +56,13 @@ class JobsService
     }
 
 
+    public function getCurrentJob(int $id){
+        return $this->jobsRepository->getCurrentJob($id);
+    }
+
+
     public function updateJob(JobUpdateRequest  $request,  int $id ) : array {
-        $current_job  = $this->jobsRepository->getCurrentJob($id);
+        $current_job  = $this->getCurrentJob($id);
         $current_job->setName($request->getName());
         $current_job->setUrl($request->getUrl());
         $current_job->setActive($request->getActive());
@@ -76,7 +81,7 @@ class JobsService
 
 
     public function deleteJob( int $id) : array{
-        $current_job  = $this->jobsRepository->getCurrentJob($id);
+        $current_job  = $this->getCurrentJob($id);
         if($current_job)
             $this->jobsRepository->remove($current_job , true);
         else
