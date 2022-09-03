@@ -1,11 +1,10 @@
 FROM php:8.1-rc-cli
 
 RUN apt-get update
-RUN apt-get install -y vim cron
+RUN apt-get install -y vim cron librabbitmq-dev
 
-RUN docker-php-ext-install pdo_mysql mysqli
-RUN pecl install redis && docker-php-ext-enable redis
-RUN docker-php-ext-install exif
+RUN docker-php-ext-install pdo_mysql mysqli exif
+RUN pecl install redis amqp && docker-php-ext-enable redis amqp
 RUN docker-php-ext-configure exif
 #
 RUN touch /var/log/schedule.log

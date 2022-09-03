@@ -2,15 +2,11 @@ FROM php:8.1-rc-fpm
 #ARG USER_ID
 #ARG GROUP_ID
 
-RUN apt-get update
+RUN apt-get update && apt-get install -y librabbitmq-dev
 
-RUN docker-php-ext-install pdo_mysql mysqli
-RUN pecl install redis && docker-php-ext-enable redis
-#RUN docker-php-ext-install intl
-RUN docker-php-ext-install exif
-#RUN docker-php-ext-configure intl
+RUN docker-php-ext-install pdo_mysql mysqli exif
+RUN pecl install redis amqp  && docker-php-ext-enable redis amqp
 RUN docker-php-ext-configure exif
-
 
 
 #RUN docker-php-ext-enable xdebug

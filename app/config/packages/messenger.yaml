@@ -9,13 +9,13 @@ framework:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                 retry_strategy:
                     max_retries: 3
-                    delay: 10
+                    delay: 3000
                     multiplier: 1
             jobs:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN_JOBS)%'
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 retry_strategy:
-                    max_retries: 3
-                    delay: 10
+                    max_retries: 2
+                    delay: 1000
 
             failed: '%env(MESSENGER_TRANSPORT_DSN_FAILED)%'
             # sync: 'sync://'
@@ -26,6 +26,7 @@ framework:
             # 'App\Message\YourMessage': async
             'App\Message\TelegramNotification': messages
             'App\Message\RunJob': jobs
+            'App\Message\TestMessage': messages
 
 # when@test:
 #    framework:

@@ -68,7 +68,7 @@ class MessageListener
                     'parse_mode' => 'html',
                     'reply_markup'=> $keyboard
                 ];
-                $this->messageBus->dispatch(new TelegramNotification($token ,$data) , [ new DelayStamp(20) ]);
+                $this->messageBus->dispatch(new TelegramNotification($token ,$data) , [ new DelayStamp(5000) ]);
                 //file_get_contents("https://api.telegram.org/bot$token/sendMessage?" . http_build_query($data ,'','&') );
         }
 

@@ -2,14 +2,10 @@
 
 namespace App\Message;
 
-use App\Entity\Jobs;
 
 final class RunJob
 {
-    /*
-     * Add whatever properties and methods you need
-     * to hold the data for this message class.
-     */
+
 
     private $job;
 
