@@ -9,6 +9,23 @@ app.get("/", (req, res) => {
 app.post("/scrape", bodyParser.text({type: '*/*'}), async (req, res) => {
     if(req.body){
         try {
+            const data  =await eval(req.body);
+            return res.status(200).send(data);
+        }catch (e) {
+            if(e.message){
+                res.status(500).send(e.message );
+            }else{
+                res.status(501).send('Something was wrong');
+            }
+        }
+    }else{
+        res.status(503).send("Ops : script not found");
+    }
+});
+
+app.post("/scrape_old", bodyParser.text({type: '*/*'}), async (req, res) => {
+    if(req.body){
+        try {
                 await eval(req.body);
 
                 const browser = await puppeteer.launch(
