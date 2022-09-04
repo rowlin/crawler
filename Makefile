@@ -11,8 +11,8 @@ logs:
 sh:
 	docker-compose run --rm php-cli bash
 docker-composer-install:
-	docker-compose run --rm php-cli composer update
-	#docker-compose run --rm php-cli composer install  --ignore-platform-req=ext-exif
+	#docker-compose run --rm php-cli composer update
+	docker-compose run --rm php-cli composer install  --ignore-platform-req=ext-exif
 docker-up:
 	docker-compose up -d
 docker-down:
