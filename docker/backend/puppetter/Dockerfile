@@ -31,7 +31,7 @@ RUN mkdir -p /home/node/Downloads \
     && chown root /tmp/.X11-unix \
     && chown -R node:node /home/node \
     && chown -R node:node /puppetter \
-    && chmod -R 777 /puppetter/pdf \
+    && chmod -R 777 /puppetter \
     && chown -R node:node ./node_modules \
     && chown -R node:node ./package.json \
     && chown -R node:node ./package-lock.json
