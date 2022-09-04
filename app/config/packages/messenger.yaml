@@ -26,7 +26,6 @@ framework:
             # 'App\Message\YourMessage': async
             'App\Message\TelegramNotification': messages
             'App\Message\RunJob': jobs
-            'App\Message\TestMessage': messages
 
 # when@test:
 #    framework:
