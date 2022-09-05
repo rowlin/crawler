@@ -34,6 +34,17 @@ services:
         RABBITMQ_DEFAULT_PASS: 'password'
       networks:
         - symfony
+  frontend:
+    image: node:18-alpine
+    user: "node"
+    working_dir: /app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./app:/app
+    command: "npm start"
+    networks:
+      - symfony
   php-cli:
     build:
       context: docker/

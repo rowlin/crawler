@@ -1,4 +1,4 @@
-init: docker-down-clear docker-pull docker-build docker-up docker-composer-install
+init: docker-down-clear docker-pull docker-build docker-up docker-composer-install docker-frontend-install docker-puppetter-install
 up: docker-up
 down: docker-down
 restart: down up
@@ -13,6 +13,10 @@ sh:
 docker-composer-install:
 	#docker-compose run --rm php-cli composer update
 	docker-compose run --rm php-cli composer install  --ignore-platform-req=ext-exif
+docker-frontend-install:
+	docker-compose run --rm frontend npm install
+docker-puppetter-install:
+	docker-compose run --rm puppetter npm install
 docker-up:
 	docker-compose up -d
 docker-down:
