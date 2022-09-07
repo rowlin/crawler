@@ -1,3 +1,11 @@
+###
+# @params site="required"
+# @params script="а"
+#
+# @name="POST request"
+POST http://localhost:3000/scrape
+Content-Type: text/html
+
 const puppeteer = require("puppeteer-extra");
 
 (async () => {

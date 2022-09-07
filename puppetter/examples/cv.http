@@ -1,12 +1,35 @@
-async function run(page ,browser ) {
-var data = [];
+###
+# @params site="required"
+# @params script="а"
+#
+# @name="POST request"
+POST http://localhost:3000/scrape
+Content-Type: text/html
+
+const puppeteer = require("puppeteer-extra");
+
+(async () => {
+const browser = await puppeteer.launch({
+args: ['--no-sandbox', '--disable-setuid-sandbox'],
+ignoreHTTPSErrors: true
+});
+const page = await browser.newPage();
+await page.setViewport({
+width: 1240,
+height: 800,
+deviceScaleFactor: 1,
+});
+
+
+async function getcvkeskus(page){
 await page.goto('https://www.cvkeskus.ee/toopakkumised?_track=index_click_job_search&op=search&search_location=landingpage&ga_track=homepage&dummy_locations=3&dummy_categories=8&search%5Bkeyword%5D=&mobile_search%5Bkeyword%5D=&tmp_city=&search%5Blocations%5D%5B%5D=3&tmp_cat=&search%5Bcategories%5D%5B%5D=8&tmp_city=&dummy_search%5Blocations%5D%5B%5D=3&tmp_category=&dummy_search%5Bcategories%5D%5B%5D=8&search%5Bkeyword%5D=&search%5Bexpires_days%5D=&search%5Bjob_lang%5D=ru&search%5Bsalary%5D=&search%5Bjob_salary%5D=3');
 await page.waitForSelector('#f_jobs_main');
 
-data =  await page.$$eval('tr.f_job_row2', (links) => {
+return await page.$$eval('tr.f_job_row2', (links) => {
+console.log(links);
 var res = [];
 links.forEach((l, i) => {
-return res[i++] = {
+res[i++] = {
 'url': l.querySelector('td.main-column > a').href,
 'text': l.querySelector('td.column.d-none.d-md-table-cell.main-column').innerText.split('\n')
 }
@@ -14,12 +37,14 @@ return res[i++] = {
 )
 return res;
 });
+}
 
-const page2 = await browser.newPage();
-await page2.goto('https://cv.ee/ru/search?limit=20&offset=0&categories%5B0%5D=INFORMATION_TECHNOLOGY&towns%5B0%5D=312&keywords%5B0%5D=php&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isQuickApply=false&languages%5B0%5D=ru');
-await page2.waitForSelector('.vacancies-list');
 
-return await data.concat( await page2.$$eval('.vacancies-list__item', (links ) => {
+async function getcv(page){
+await page.goto('https://cv.ee/ru/search?limit=20&offset=0&categories%5B0%5D=INFORMATION_TECHNOLOGY&towns%5B0%5D=312&keywords%5B0%5D=php&fuzzy=true&suitableForRefugees=false&isHourlySalary=false&isQuickApply=false&languages%5B0%5D=ru');
+await page.waitForSelector('.vacancies-list');
+
+return  await page.$$eval('.vacancies-list__item', (links ) => {
 var res = [];
 links.forEach( (l, i )=> {
 return res[i++] =  {
@@ -32,5 +57,14 @@ return  obj.innerText;
 )
 return res;
 
-}));
+});
 }
+
+
+const data = await getcvkeskus(page);
+const page2 = await browser.newPage();
+const data2 = await getcv(page2);
+browser.close();
+
+return data.concat(data2);
+})();
