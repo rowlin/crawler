@@ -62,7 +62,12 @@ class MessageListener
                     ];
                 }
                 if(!empty($keyboard_array)){
-                    array_push( $keyboard_link , [
+                    if(!isset($keyboard_link["inline_keyboard"])){
+                        $keyboard_link["inline_keyboard"] = [];
+                    }
+
+
+                    array_push( $keyboard_link["inline_keyboard"] , [
                         ...$keyboard_array
                     ]);
                 }
