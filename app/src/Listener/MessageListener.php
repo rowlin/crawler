@@ -41,6 +41,8 @@ class MessageListener
 
                 $link = [];
                 $keyboard_array = [];
+                $keyboard_link = [];
+
                 foreach ($event->getNotify()->getBots()->getBotButtons() as $button){
                     if($button->getCallback() === 'link'){
                         $link =  ['text' => $button->getName() , 'url' => $r['url']];
@@ -50,23 +52,31 @@ class MessageListener
                 }
 
 
-                $keyboard = json_encode([
-                    "inline_keyboard" => [
-                        [
-                            $link
-                        ],
-                        [
-                            ...$keyboard_array
+                if(!empty($link)) {
+                    $keyboard_link =[
+                        "inline_keyboard" => [
+                            [
+                                $link
+                            ]
                         ]
-                    ]
-                ]);
+                    ];
+                }
+                if(!empty($keyboard_array)){
+                    array_push( $keyboard_link , [
+                        ...$keyboard_array
+                    ]);
+                }
+
+                if(!empty($keyboard_link)){
+                    $keyboard = json_encode($keyboard_link);
+                }
 
 
                 $data= [
                     'chat_id' => $channel,
                     'text' => $result_message,
                     'parse_mode' => 'html',
-                    'reply_markup'=> $keyboard
+                    'reply_markup'=> $keyboard ?? null
                 ];
                 $this->messageBus->dispatch(new TelegramNotification($token ,$data) , [ new DelayStamp(5000) ]);
                 //file_get_contents("https://api.telegram.org/bot$token/sendMessage?" . http_build_query($data ,'','&') );

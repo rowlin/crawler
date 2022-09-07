@@ -9,7 +9,7 @@ framework:
                 dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                 retry_strategy:
                     max_retries: 3
-                    delay: 3000
+                    delay: 5000
                     multiplier: 1
             jobs:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'

@@ -83,7 +83,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-    command: php /app/bin/console messenger:consume -vv
+    command: php /app/bin/console messenger:consume messages
     networks:
       - symfony
   redis:

@@ -70,10 +70,10 @@ class JobsService
         $current_job->setCron($request->getCron());
         $current_job->setShowDublicate($request->isShowDublicate());
         $current_job->setMaxCount($request->getMaxCount());
-
-        $res = $this->jobsRepository->addBotChannel( (int) $request->getChannel('bots')['id'] , (int) $request->getChannel('channels')['id']);
-        $current_job->setChannel($res);
-
+        if(!empty($request->getChannel('bots')['id']) && !empty($request->getChannel('channels')['id']) ) {
+            $res = $this->jobsRepository->addBotChannel((int)$request->getChannel('bots')['id'], (int)$request->getChannel('channels')['id']);
+            $current_job->setChannel($res);
+        }
         $this->jobsRepository->add($current_job , true);
 
         return ['message' => "Job updated" , 'data' => $this->getJobs()];

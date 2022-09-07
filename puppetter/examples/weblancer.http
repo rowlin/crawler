@@ -1,0 +1,57 @@
+###
+# @params site="required"
+# @params script="а"
+#
+# @name="POST request"
+POST http://localhost:3000/scrape
+Content-Type: text/html
+
+const puppeteer = require("puppeteer-extra");
+
+(async () => {
+const browser = await puppeteer.launch({
+args: ['--no-sandbox', '--disable-setuid-sandbox'],
+ignoreHTTPSErrors: true
+});
+const page = await browser.newPage();
+await page.setViewport({
+width: 1240,
+height: 800,
+deviceScaleFactor: 1,
+});
+
+async function goWeblancer(page ,i ,  browser) {
+await page.goto('https://www.weblancer.net/jobs/veb-programmirovanie-31/?page=' + i, {waitUntil: 'domcontentloaded'});
+await page.waitForSelector('#tab_pane-main > div.page_content.d-flex.flex-column > div.cols_table.divided_rows');
+return await page.evaluate(() => {
+let productNodes = Array.from(document.querySelectorAll(`.row.click_container-link.set_href`));
+const res = [];
+productNodes.forEach((el, i) => {
+return res[i] =
+{
+'url': el.querySelector('a.text-bold').href,
+'text': [el.querySelector('a.text-bold').innerText,
+el.querySelector('.text_field.text-inline').innerText,
+el.querySelector(`a.text-muted.data_url`) ? el.querySelector(`a.text-muted.data_url`).innerText : "",
+],
+}
+
+});
+return res;
+});
+}
+
+async function run()
+{
+var data = [];
+for (var i = 1; i < 10; i++) {
+var res =   await goWeblancer(page, i, browser)
+data.push(...res);
+}
+return data;
+}
+
+const data = await run();
+browser.close();
+return data;
+})();

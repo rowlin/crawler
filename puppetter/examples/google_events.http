@@ -1,0 +1,65 @@
+###
+# @params site="required"
+# @params script="а"
+#
+# @name="POST request"
+POST http://localhost:3000/scrape
+Content-Type: text/html
+
+const puppeteer = require("puppeteer-extra");
+
+(async () => {
+const browser = await puppeteer.launch({
+args: ['--no-sandbox', '--disable-setuid-sandbox'],
+ignoreHTTPSErrors: true
+});
+const page = await browser.newPage();
+await page.setViewport({
+width: 1240,
+height: 800,
+deviceScaleFactor: 1,
+});
+
+//set locale
+await page.setExtraHTTPHeaders({
+'accept-language': 'en-US,en;q=0.9,hy;q=0.8'
+});
+
+
+await page.goto('https://google.com');
+const [button] = await page.$x("//button[contains(., 'Accept all')]");
+
+if (button) {
+await button.click();
+}
+
+await page.waitForSelector('input[type=text]');
+
+// await page.type('input[name=search]', 'Adenosine triphosphate');
+await page.$eval('input[type=text]', el => el.value = 'tallinn events');
+
+await (await  page.$('input[type=text]')).press('Enter');
+
+await page.waitForSelector('#extabar');
+
+const data =  await page.evaluate(() => {
+const res = Array.from(document.querySelectorAll("g-scrolling-carousel  a"));
+const resT = [];
+res.forEach((el, i) => {
+
+if( Object.keys(el.innerText).length !== 0 ) {
+return resT[i] =
+{
+'url': el.href,
+'text': [el.innerText],
+'html': [el.innerHTML]
+}
+}
+});
+return resT;
+});
+
+browser.close();
+
+return data
+})();
