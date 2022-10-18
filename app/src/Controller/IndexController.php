@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Rompetomp\InertiaBundle\Service\InertiaInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
@@ -17,14 +18,11 @@ class IndexController extends AbstractController
     }
 
 
-    /**
-     * @Route("/", name="app_index")
-     */
+    #[Route('/', methods: ['GET'] ,name: 'app_index')]
     public function main(InertiaInterface $inertia)
     {
-        return $inertia->render('IndexPage' , ['prop' => 'dataValue']);
+        return $inertia->render('index' , ['data' => 'Test']);
     }
-
 
 
 }

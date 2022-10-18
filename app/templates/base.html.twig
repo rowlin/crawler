@@ -4,18 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="./images/favicon.ico">
-    <link rel="apple-touch-icon" href="./images/test.png">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/logo.png">
     <meta name="theme-color" content="#317EFB"/>
-    <link rel="canonical" href="http://localhost/"/>
     <meta name="description" content="Author: K R,
     Illustrator: P. Picture, Category: Books, Price: free,
     Length: 784 pages">
-    <link rel="stylesheet" type="text/css" href="./styles/app.css">
     <title>{% block title %}Crawler{% endblock %}</title>
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
 
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
@@ -25,7 +20,7 @@
 </head>
 <body>
 <noscript>
-    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    <strong>We're sorry but, this site doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 </noscript>
         {{ inertia(page) }}
         {% block javascripts %}
@@ -34,5 +29,3 @@
     </body>
 </html>
 
-<!DOCTYPE html>
-<html>
