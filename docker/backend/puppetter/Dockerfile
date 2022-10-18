@@ -14,9 +14,9 @@ RUN apt-get update \
 WORKDIR /puppetter
 
 COPY /puppetter/package.json /puppetter
-RUN npm i
+#RUN npm i
 COPY  /puppetter /puppetter
-
+RUN npm install
 #RUN npm init -y &&  \
 # puppeteer-stream
 # Add user so we don't need --no-sandbox.

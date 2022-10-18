@@ -13,9 +13,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class RunJobNotificationHandler implements MessageHandlerInterface
 {
 
-    public function __construct(private EventDispatcherInterface $dispatcher){
-
-    }
+    public function __construct(private EventDispatcherInterface $dispatcher)
+    {}
 
     public function __invoke(RunJob $job)
     {

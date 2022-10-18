@@ -206,6 +206,9 @@
     "psr/log": {
         "version": "1.1.4"
     },
+    "rompetomp/inertia-bundle": {
+        "version": "v2.4.2"
+    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },
@@ -515,6 +518,9 @@
     },
     "theseer/tokenizer": {
         "version": "1.2.1"
+    },
+    "twig/extra-bundle": {
+        "version": "v3.4.0"
     },
     "twig/twig": {
         "version": "v3.4.1"

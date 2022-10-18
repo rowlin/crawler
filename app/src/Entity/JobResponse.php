@@ -38,6 +38,11 @@ class JobResponse
      */
     private $job;
 
+    /**
+     * @ORM\Column(type="boolean" , options={"default":false })
+     */
+    private bool $sent;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -63,7 +68,6 @@ class JobResponse
     public function setResult(string $result): self
     {
         $this->result = $result;
-
         return $this;
     }
 
@@ -90,4 +94,18 @@ class JobResponse
 
         return $this;
     }
+
+    public function isSent(): bool
+    {
+        return $this->sent;
+    }
+
+    public function setSent(bool $sent): self
+    {
+        $this->sent = $sent;
+        return $this;
+    }
+
+
+
 }

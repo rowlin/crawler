@@ -1,7 +1,13 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-<div class="section">
-    <card-list></card-list>
-</div>
+    {% include "common/header.html.twig" %}
+    <top-panel></top-panel>
+    <section class="columns">
+        <div class="container column is-12">
+            <div class="section">
+                <card-list></card-list>
+            </div>
+        </div>
+    </section>
 {% endblock body %}

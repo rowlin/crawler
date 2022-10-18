@@ -2,7 +2,14 @@ framework:
     messenger:
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         failure_transport: failed
-
+        default_bus: command.bus
+        buses:
+            event.bus:
+                middleware:
+                    - App\Message\AuditMiddleware
+            command.bus:
+                middleware:
+                    - validation
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             messages:
@@ -12,12 +19,12 @@ framework:
                     delay: 6000
                     multiplier: 1
             jobs:
-                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                dsn: '%env(MESSENGER_TRANSPORT_DSN_JOBS)%'
                 retry_strategy:
                     max_retries: 2
                     delay: 1000
             failed: '%env(MESSENGER_TRANSPORT_DSN_FAILED)%'
-            # sync: 'sync://'
+            sync: 'sync://'
 
 
         routing:
@@ -25,6 +32,7 @@ framework:
             # 'App\Message\YourMessage': async
             'App\Message\TelegramNotification': messages
             'App\Message\RunJob': jobs
+            'App\Message\TestMessage': messages
 
 # when@test:
 #    framework:

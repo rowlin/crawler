@@ -29,6 +29,7 @@ class MessageListener
 
     public function onPushMessage(MessageEvent $event){
         $r =  $event->getMessage() ; //here we get one message
+        $r_job_id = $event->getJobId();
         $channel = trim($event->getNotify()->getChannels()->getChatId());
         $token = trim($event->getNotify()->getBots()->getToken());
         if(gettype($r) === 'array'){
@@ -71,11 +72,9 @@ class MessageListener
                         ...$keyboard_array
                     ]);
                 }
-
                 if(!empty($keyboard_link)){
                     $keyboard = json_encode($keyboard_link);
                 }
-
 
                 $data= [
                     'chat_id' => $channel,
@@ -83,8 +82,7 @@ class MessageListener
                     'parse_mode' => 'html',
                     'reply_markup'=> $keyboard ?? null
                 ];
-                $this->messageBus->dispatch(new TelegramNotification($token ,$data) , [ new DelayStamp(5000) ]);
-                //file_get_contents("https://api.telegram.org/bot$token/sendMessage?" . http_build_query($data ,'','&') );
+                $this->messageBus->dispatch(new TelegramNotification($token , $r_job_id, $data ) );
         }
 
     }

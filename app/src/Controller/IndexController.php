@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Rompetomp\InertiaBundle\Service\InertiaInterface;
 
 class IndexController extends AbstractController
 {
@@ -20,9 +20,9 @@ class IndexController extends AbstractController
     /**
      * @Route("/", name="app_index")
      */
-    public function main(): Response
+    public function main(InertiaInterface $inertia)
     {
-        return $this->render('front/main.html.twig');
+        return $inertia->render('IndexPage' , ['prop' => 'dataValue']);
     }
 
 

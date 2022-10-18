@@ -1,27 +1,38 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}~!!!~{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="./images/favicon.ico">
+    <link rel="apple-touch-icon" href="./images/test.png">
+    <meta name="theme-color" content="#317EFB"/>
+    <link rel="canonical" href="http://localhost/"/>
+    <meta name="description" content="Author: K R,
+    Illustrator: P. Picture, Category: Books, Price: free,
+    Length: 784 pages">
+    <link rel="stylesheet" type="text/css" href="./styles/app.css">
+    <title>{% block title %}Crawler{% endblock %}</title>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
 
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+    {{ inertiaHead(page) }}
+
+</head>
+<body>
+<noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+</noscript>
+        {{ inertia(page) }}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
-    </head>
-    <body>
-        <div id="app">
-            {% include "common/header.html.twig" %}
-            <top-panel></top-panel>
-            <section class="columns">
-                <div class="container column is-12">
-                    {% block body %}{% endblock %}
-                </div>
-            </section>
-        </div>
     </body>
 </html>
+
+<!DOCTYPE html>
+<html>
