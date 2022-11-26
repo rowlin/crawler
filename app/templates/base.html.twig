@@ -11,21 +11,23 @@
     Illustrator: P. Picture, Category: Books, Price: free,
     Length: 784 pages">
     <title>{% block title %}Crawler{% endblock %}</title>
-
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+        }
+    </style>
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-    {{ inertiaHead(page) }}
-
 </head>
 <body>
-<noscript>
-    <strong>We're sorry but, this site doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-</noscript>
-        {{ inertia(page) }}
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </body>
+{% block body %}
+{% endblock %}
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
+</body>
 </html>
 

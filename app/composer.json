@@ -16,7 +16,6 @@
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpstan/phpdoc-parser": "^1.6",
         "predis/predis": "^2.0",
-        "rompetomp/inertia-bundle": "^2.4",
         "symfony/amqp-messenger": "6.1.*",
         "symfony/browser-kit": "6.1.*",
         "symfony/cache": "6.1.*",
@@ -36,6 +35,7 @@
         "symfony/runtime": "*",
         "symfony/serializer": "6.1.*",
         "symfony/twig-bundle": "6.1.*",
+        "symfony/ux-vue": "^2.5",
         "symfony/validator": "6.1.*",
         "symfony/webpack-encore-bundle": "^1.16",
         "symfony/yaml": "*",
@@ -96,6 +96,8 @@
         "fakerphp/faker": "^1.19",
         "phpunit/phpunit": "^9.5",
         "symfony/maker-bundle": "^1.43",
-        "symfony/phpunit-bridge": "*"
+        "symfony/phpunit-bridge": "*",
+        "symfony/stopwatch": "6.1.*",
+        "symfony/web-profiler-bundle": "6.1.*"
     }
 }

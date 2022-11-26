@@ -1,6 +1,7 @@
 const Encore = require('@symfony/webpack-encore');
-const path = require('path')
-
+const path = require('path');
+const tailwindcss = require('tailwindcss');
+const autoprefixer = require('autoprefixer');
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
 if (!Encore.isRuntimeEnvironmentConfigured()) {
@@ -14,7 +15,7 @@ Encore
     .setPublicPath('/build')
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
-    .enableVueLoader()
+    //.enableVueLoader()
     .addAliases({
         vue$: 'vue/dist/vue.runtime.esm.js',
         '@': path.resolve('assets/js')
@@ -30,10 +31,10 @@ Encore
 
     // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
     //.enableStimulusBridge('./assets/controllers.json')
-    .enableVueLoader()
+    //.enableVueLoader()
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
-
+    .enablePostCssLoader()
     // will require an extra script tag for runtime.js
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
@@ -63,8 +64,6 @@ Encore
     })
 
     // enables Sass/SCSS support
-    .enableSassLoader()
-
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 
@@ -80,3 +79,5 @@ Encore
 ;
 
 module.exports = Encore.getWebpackConfig();
+
+Encore.enablePostCssLoader();
